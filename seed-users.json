@@ -1,0 +1,38 @@
+[
+  {
+    "egn": "1234567890",
+    "lnch": "LNCH123",
+    "nameCyrillic": "Иван Петров",
+    "nameLatin": "Ivan Petrov",
+    "email": "ivan.petrov@example.com",
+    "phone": "0888123456",
+    "address": "ул. Примерна 1, София",
+    "username": "ivan_p",
+    "password": "HASHED_PASSWORD_FOR_IVAN_HERE",
+    "createdAt": "2025-05-09T10:00:00Z"
+  },
+  {
+    "egn": "0987654321",
+    "lnch": null,
+    "nameCyrillic": "Мария Георгиева",
+    "nameLatin": "Maria Georgieva",
+    "email": "maria.georgieva@example.com",
+    "phone": "0888654321",
+    "address": "бул. Тестов 25, Пловдив",
+    "username": "maria_g",
+    "password": "HASHED_PASSWORD_FOR_MARIA_HERE",
+    "createdAt": "2025-05-09T10:05:00Z"
+  },
+  {
+    "egn": "1122334455",
+    "lnch": "PASSPORT987",
+    "nameCyrillic": "Георги Димитров",
+    "nameLatin": "Georgi Dimitrov",
+    "email": "georgi.dimitrov@example.com",
+    "phone": "0888789012",
+    "address": "кв. Изгрев, бл. 10, Варна",
+    "username": "georgi_d",
+    "password": "HASHED_PASSWORD_FOR_GEORGI_HERE",
+    "createdAt": "2025-05-09T10:10:00Z"
+  }
+]
