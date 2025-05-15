@@ -1,12 +1,11 @@
-import express from "express";
 import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" }); // Moved to the top
+
+import express from "express";
 import clientPromise from "./lib/mongodb.js"; // Adjusted path assuming server.js is at root
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cors from "cors"; // Import the cors middleware
-
-// Load environment variables from .env.local
-dotenv.config({ path: ".env.local" });
 
 const app = express();
 const port = process.env.PORT || 3001;

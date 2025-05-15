@@ -4,6 +4,11 @@ import React from "react";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation"; // Import useRouter
+import Input from "@/components/Input"; // Import the new Input component
+import PasswordInput from "@/components/PasswordInput"; // Import the new PasswordInput component
+import Button from "@/components/Button"; // Import the new Button component
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Updated Inputs type
 type Inputs = {
@@ -37,20 +42,25 @@ const LogIn = () => {
         console.log("Login successful:", result);
         // Store the token if needed (e.g., in localStorage or context)
         // localStorage.setItem('token', result.token);
-        alert("Login successful!");
-        router.push("/dashboard"); // Redirect to dashboard
+        toast.success("Login successful!", {
+          autoClose: 2000, // Auto close after 2 seconds
+          onClose: () => {
+            router.push("/dashboard"); // Redirect to dashboard after toast closes
+          },
+        });
       } else {
         console.error("Login failed:", result.message);
-        alert(`Login failed: ${result.message || "Invalid credentials"}`);
+        toast.error(`Login failed: ${result.message || "Invalid credentials"}`);
       }
     } catch (error) {
       console.error("An error occurred during login:", error);
-      alert("An error occurred during login. Please try again.");
+      toast.error("An error occurred during login. Please try again.");
     }
   };
 
   return (
     <div>
+      <ToastContainer />
       {/* Navigation Bar */}
       <nav className="bg-white shadow-md py-4 px-8 flex justify-between items-center">
         {/* Left Section: Logo */}
@@ -124,33 +134,25 @@ const LogIn = () => {
                     <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                   </svg>
                 </span>
-                <input
+                <Input
                   id="userName"
+                  label=""
                   type="text"
                   placeholder="Имейл адрес"
-                  {...register("userName", {
+                  register={register("userName", {
                     required: "Потребителското име е задължително",
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                       message: "Невалиден имейл адрес",
                     },
                   })}
+                  error={errors.userName}
                   className="pl-10 pr-10 py-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  wrapperClassName="mb-0"
                 />
               </div>
-              {errors.userName && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.userName.message}
-                </p>
-              )}
 
               <div className="mb-6 relative">
-                <label
-                  htmlFor="password"
-                  className="block text-xs text-gray-500 mb-1 sr-only"
-                >
-                  Парола:
-                </label>
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 pt-0">
                   <svg
                     className="h-5 w-5 text-gray-400"
@@ -164,11 +166,11 @@ const LogIn = () => {
                     <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                   </svg>
                 </span>
-                <input
+                <PasswordInput
                   id="password"
-                  type="password"
+                  label=""
                   placeholder="Парола"
-                  {...register("password", {
+                  register={register("password", {
                     required: "Паролата е задължителна",
                     minLength: {
                       value: 10,
@@ -180,21 +182,18 @@ const LogIn = () => {
                         "Паролата трябва да е поне 10 символа и да съдържа поне една малка буква, една главна буква и една цифра",
                     },
                   })}
+                  error={errors.password}
                   className="pl-10 py-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  wrapperClassName="mb-0"
                 />
               </div>
-              {errors.password && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.password.message}
-                </p>
-              )}
 
-              <button
+              <Button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-2.5 rounded-md hover:bg-blue-700 transition-colors font-semibold"
+                className="w-full bg-blue-600 text-white py-2.5 rounded-md hover:bg-blue-700 transition-colors font-semibold mt-0"
               >
                 ВХОД
-              </button>
+              </Button>
             </form>
             <div className="mt-6 border-t pt-4">
               <p className="text-xs text-gray-600 mb-2">

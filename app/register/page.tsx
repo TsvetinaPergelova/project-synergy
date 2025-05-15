@@ -3,6 +3,12 @@ import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form"; // Import useForm
+import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import Input from "@/components/Input"; // Import the new Input component
+import PasswordInput from "@/components/PasswordInput"; // Import the new PasswordInput component
+import Button from "@/components/Button"; // Import the new Button component
+import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
+import "react-toastify/dist/ReactToastify.css"; // Import toastify styles
 
 // Define an interface for your form inputs
 interface IRegisterInputs {
@@ -27,6 +33,7 @@ const Register = () => {
   } = useForm<IRegisterInputs>();
 
   const passwordValue = watch("password"); // Get current password value
+  const router = useRouter(); // Initialize router for navigation
 
   const onSubmit: SubmitHandler<IRegisterInputs> = async (data) => {
     // Remove the repeatPassword field as it's not needed for the backend
@@ -48,26 +55,31 @@ const Register = () => {
       if (!response.ok) {
         // Handle server-side validation errors or other issues
         console.error("Registration failed:", result.message);
-        alert(`Registration failed: ${result.message || "Unknown error"}`);
+        toast.error(
+          `Registration failed: ${result.message || "Unknown error"}`
+        );
         return;
       }
 
       // Handle successful registration
       console.log("Registration successful:", result);
-      alert("Registration successful! You can now log in.");
-      // Optionally, redirect the user to the login page or dashboard
-      // For example, using Next.js router:
-      // import { useRouter } from 'next/navigation';
-      // const router = useRouter();
-      // router.push('/'); // or '/login'
+      toast.success("Registration successful! You can now log in.", {
+        autoClose: 2000, // Auto close after 2 seconds
+        onClose: () => {
+          router.push("/"); // Redirect to login page (root path) after toast closes
+        },
+      });
     } catch (error) {
       console.error("An error occurred during registration:", error);
-      alert("An error occurred. Please try again.");
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      toast.error(`An error occurred: ${errorMessage}. Please try again.`);
     }
   };
 
   return (
     <div>
+      <ToastContainer />
       {/* Navigation Bar */}
       <nav className="bg-white shadow-md py-4 px-8 flex justify-between items-center">
         {/* Left Section: Logo */}
@@ -131,170 +143,106 @@ const Register = () => {
           <div className="border-b border-gray-300 mb-6"></div>
 
           {/* Form Fields */}
-          <label
-            htmlFor="egn"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            * ЕГН:
-          </label>
-          <input
-            type="text"
+          <Input
             id="egn"
-            {...register("egn", {
+            label="* ЕГН:"
+            register={register("egn", {
               required: "ЕГН е задължително поле",
               pattern: {
                 value: /^[0-9]{10}$/,
                 message: "ЕГН трябва да бъде точно 10 цифри",
               },
             })}
-            className="h-10 w-full rounded-lg border-gray-300 indent-4 text-black-900 focus:ring focus:ring-gray-400 border-2 border-solid mb-1"
+            error={errors.egn}
             placeholder="8701206763"
+            wrapperClassName="mb-1"
           />
-          {errors.egn && (
-            <p className="text-red-500 text-xs mb-3">{errors.egn.message}</p>
-          )}
 
-          <label
-            htmlFor="lnch"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            ЛНЧ или паспорт:
-          </label>
-          <input
-            type="text"
+          <Input
             id="lnch"
-            {...register("lnch")} // No specific validation for now, can be added
-            className="h-10 w-full rounded-lg border-gray-300 indent-4 text-black-900 focus:ring focus:ring-gray-400 border-2 border-solid mb-4"
+            label="ЛНЧ или паспорт:"
+            register={register("lnch")} // No specific validation for now, can be added
+            wrapperClassName="mb-4"
           />
-          {/* No error message for lnch as it's optional and has no validation yet */}
 
-          <label
-            htmlFor="nameCyrillic"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            * Име и фамилия на кирилица:
-          </label>
-          <input
-            type="text"
+          <Input
             id="nameCyrillic"
-            {...register("nameCyrillic", {
+            label="* Име и фамилия на кирилица:"
+            register={register("nameCyrillic", {
               required: "Името на кирилица е задължително",
+              pattern: {
+                value: /^[\u0400-\u04FF\s]+$/u,
+                message: "Името трябва да съдържа само букви на кирилица",
+              },
             })}
-            className="h-10 w-full rounded-lg border-gray-300 indent-4 text-black-900 focus:ring focus:ring-gray-400 border-2 border-solid mb-1"
+            error={errors.nameCyrillic}
+            wrapperClassName="mb-1"
           />
-          {errors.nameCyrillic && (
-            <p className="text-red-500 text-xs mb-3">
-              {errors.nameCyrillic.message}
-            </p>
-          )}
 
-          <label
-            htmlFor="nameLatin"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            * Име и фамилия на латиница:
-          </label>
-          <input
-            type="text"
+          <Input
             id="nameLatin"
-            {...register("nameLatin", {
+            label="* Име и фамилия на латиница:"
+            register={register("nameLatin", {
               required: "Името на латиница е задължително",
+              pattern: {
+                value: /^[a-zA-Z\s]+$/,
+                message: "Името трябва да съдържа само букви на латиница",
+              },
             })}
-            className="h-10 w-full rounded-lg border-gray-300 indent-4 text-black-900 focus:ring focus:ring-gray-400 border-2 border-solid mb-1"
+            error={errors.nameLatin}
+            wrapperClassName="mb-1"
           />
-          {errors.nameLatin && (
-            <p className="text-red-500 text-xs mb-3">
-              {errors.nameLatin.message}
-            </p>
-          )}
 
-          <label
-            htmlFor="email"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            * E-mail:
-          </label>
-          <input
-            type="email"
+          <Input
             id="email"
-            {...register("email", {
+            label="* E-mail:"
+            type="email"
+            register={register("email", {
               required: "Имейлът е задължителен",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: "Невалиден имейл адрес",
               },
             })}
-            className="h-10 w-full rounded-lg border-gray-300 indent-4 text-black-900 focus:ring focus:ring-gray-400 border-2 border-solid mb-1"
+            error={errors.email}
+            wrapperClassName="mb-1"
           />
-          {errors.email && (
-            <p className="text-red-500 text-xs mb-3">{errors.email.message}</p>
-          )}
 
-          <label
-            htmlFor="phone"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            * Телефон:
-          </label>
-          <input
-            type="text"
+          <Input
             id="phone"
-            {...register("phone", { required: "Телефонът е задължителен" })}
-            className="h-10 w-full rounded-lg border-gray-300 indent-4 text-black-900 focus:ring focus:ring-gray-400 border-2 border-solid mb-1"
+            label="* Телефон:"
+            register={register("phone", {
+              required: "Телефонът е задължителен",
+            })}
+            error={errors.phone}
+            wrapperClassName="mb-1"
           />
-          {errors.phone && (
-            <p className="text-red-500 text-xs mb-3">{errors.phone.message}</p>
-          )}
 
-          <label
-            htmlFor="address"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            * Адрес:
-          </label>
-          <input
-            type="text"
+          <Input
             id="address"
-            {...register("address", { required: "Адресът е задължителен" })}
-            className="h-10 w-full rounded-lg border-gray-300 indent-4 text-black-900 focus:ring focus:ring-gray-400 border-2 border-solid mb-1"
+            label="* Адрес:"
+            register={register("address", {
+              required: "Адресът е задължителен",
+            })}
+            error={errors.address}
+            wrapperClassName="mb-1"
           />
-          {errors.address && (
-            <p className="text-red-500 text-xs mb-3">
-              {errors.address.message}
-            </p>
-          )}
 
-          <label
-            htmlFor="username"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            * Потребител:
-          </label>
-          <input
-            type="text"
+          <Input
             id="username"
-            {...register("username", {
+            label="* Потребител:"
+            register={register("username", {
               required: "Потребителското име е задължително",
             })}
-            className="h-10 w-full rounded-lg border-gray-300 indent-4 text-black-900 focus:ring focus:ring-gray-400 border-2 border-solid mb-1"
+            error={errors.username}
             placeholder="philip_philipov"
+            wrapperClassName="mb-1"
           />
-          {errors.username && (
-            <p className="text-red-500 text-xs mb-3">
-              {errors.username.message}
-            </p>
-          )}
 
-          <label
-            htmlFor="password"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            * Парола:
-          </label>
-          <input
-            type="password"
+          <PasswordInput
             id="password"
-            {...register("password", {
+            label="* Парола:"
+            register={register("password", {
               required: "Паролата е задължителна",
               minLength: {
                 value: 10,
@@ -306,37 +254,21 @@ const Register = () => {
                   "Паролата трябва да съдържа поне една малка буква, една главна буква и една цифра",
               },
             })}
-            className="h-10 w-full rounded-lg border-gray-300 indent-4 text-black-900 focus:ring focus:ring-gray-400 border-2 border-solid mb-1"
+            error={errors.password}
             placeholder="••••••••"
           />
-          {errors.password && (
-            <p className="text-red-500 text-xs mb-3">
-              {errors.password.message}
-            </p>
-          )}
 
-          <label
-            htmlFor="repeatPassword"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            * Повторете Парола:
-          </label>
-          <input
-            type="password"
+          <PasswordInput
             id="repeatPassword"
-            {...register("repeatPassword", {
+            label="* Повторете Парола:"
+            register={register("repeatPassword", {
               required: "Повторната парола е задължителна",
               validate: (value) =>
                 value === passwordValue || "Паролите не съвпадат",
             })}
-            className="h-10 w-full rounded-lg border-gray-300 indent-4 text-black-900 focus:ring focus:ring-gray-400 border-2 border-solid mb-1"
+            error={errors.repeatPassword}
             placeholder="••••••••"
           />
-          {errors.repeatPassword && (
-            <p className="text-red-500 text-xs mb-3">
-              {errors.repeatPassword.message}
-            </p>
-          )}
 
           {/* Border Bottom */}
           <div className="border-b border-gray-300 mb-6"></div>
@@ -346,12 +278,7 @@ const Register = () => {
             Ви служат за вход във Виртуален банков клон (e-fibank).
           </p>
 
-          <button
-            type="submit"
-            className="btn w-full bg-blue-500 text-white py-3 px-4 rounded-xl font-bold uppercase mt-6 hover:bg-blue-600 transition-all duration-300"
-          >
-            Изпратете искане за регистрация
-          </button>
+          <Button type="submit">Изпратете искане за регистрация</Button>
         </form>
       </div>
 
