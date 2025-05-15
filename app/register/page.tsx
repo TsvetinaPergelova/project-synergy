@@ -1,7 +1,5 @@
 "use client"; // Add this at the top for client components
-import Link from "next/link";
-import React from "react";
-import Image from "next/image";
+import React, { useState, useEffect } from "react"; // Import useState and useEffect
 import { useForm, SubmitHandler } from "react-hook-form"; // Import useForm
 import { useRouter } from "next/navigation"; // Import useRouter for navigation
 import Input from "@/components/Input"; // Import the new Input component
@@ -9,6 +7,9 @@ import PasswordInput from "@/components/PasswordInput"; // Import the new Passwo
 import Button from "@/components/Button"; // Import the new Button component
 import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
 import "react-toastify/dist/ReactToastify.css"; // Import toastify styles
+import Header from "@/components/Header"; // Import the new Header component
+import FooterRegister from "@/components/FooterRegister"; // Import the new FooterRegister component
+import TextareaInput from "@/components/TextAreaInput";
 
 // Define an interface for your form inputs
 interface IRegisterInputs {
@@ -34,6 +35,74 @@ const Register = () => {
 
   const passwordValue = watch("password"); // Get current password value
   const router = useRouter(); // Initialize router for navigation
+
+  // State for password strength indicator
+  const [strengthDetails, setStrengthDetails] = useState({
+    message: "",
+    color: "bg-gray-300",
+    widthClass: "w-0",
+  });
+
+  // Effect to update password strength
+  useEffect(() => {
+    if (!passwordValue) {
+      setStrengthDetails({
+        message: "",
+        color: "bg-gray-300",
+        widthClass: "w-0",
+      });
+      return;
+    }
+
+    let currentMessage = "";
+    let currentColor = "bg-red-500"; // Default to weak
+    let currentWidthClass = "w-1/4"; // 25%
+
+    const len = passwordValue.length;
+    const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(passwordValue);
+
+    if (len > 0 && len < 10) {
+      currentMessage = "Паролата е твърде слаба."; // Matches image strength text for short/weak pw
+      currentColor = "bg-red-500";
+      currentWidthClass = "w-1/4";
+    } else if (len >= 10) {
+      const meetsPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{10,}$/.test(
+        passwordValue
+      );
+
+      if (!meetsPattern) {
+        currentMessage = "Паролата е твърде слаба.";
+        currentColor = "bg-red-500";
+        currentWidthClass = "w-1/3"; // 33%
+      } else {
+        // Meets basic complexity (lower, upper, digit, 10+ chars)
+        if (hasSymbol && len >= 12) {
+          // Stronger if has symbol and longer
+          currentMessage = "Паролата е много силна.";
+          currentColor = "bg-green-600";
+          currentWidthClass = "w-full"; // 100%
+        } else if (hasSymbol) {
+          currentMessage = "Паролата е силна.";
+          currentColor = "bg-green-500";
+          currentWidthClass = "w-3/4"; // 75%
+        } else {
+          currentMessage = "Паролата е добра."; // Meets pattern, no symbols
+          currentColor = "bg-yellow-500";
+          currentWidthClass = "w-2/3"; // 66%
+        }
+      }
+    } else {
+      // Empty password
+      currentMessage = "";
+      currentColor = "bg-gray-300";
+      currentWidthClass = "w-0";
+    }
+    setStrengthDetails({
+      message: currentMessage,
+      color: currentColor,
+      widthClass: currentWidthClass,
+    });
+  }, [passwordValue]);
 
   const onSubmit: SubmitHandler<IRegisterInputs> = async (data) => {
     // Remove the repeatPassword field as it's not needed for the backend
@@ -81,46 +150,7 @@ const Register = () => {
     <div>
       <ToastContainer />
       {/* Navigation Bar */}
-      <nav className="bg-white shadow-md py-4 px-8 flex justify-between items-center">
-        {/* Left Section: Logo */}
-        <div className="flex items-center">
-          <Image
-            src="/logo-fibank-signature.svg"
-            alt="Fibank Logo"
-            width={150} // Replace with actual width of your logo
-            height={40} // Replace with actual height of your logo
-            className="h-8 w-auto" // You might adjust or remove className depending on how width/height props affect it
-          />
-        </div>
-
-        {/* Center Section: Links */}
-        <div className="flex items-center space-x-8 justify-center">
-          <a href="#" className="text-gray-600 hover:text-blue-500 text-sm">
-            English
-          </a>
-          <a href="#" className="text-gray-600 hover:text-blue-500 text-sm">
-            Към сайта
-          </a>
-          <a href="#" className="text-gray-600 hover:text-blue-500 text-sm">
-            <i className="fab fa-apple"></i> Мобилно приложение
-          </a>
-          <a href="#" className="text-gray-600 hover:text-blue-500 text-sm">
-            Промени в ОУ и тарифа
-          </a>
-          <a href="#" className="text-gray-600 hover:text-blue-500 text-sm">
-            Помощ
-          </a>
-        </div>
-
-        {/* Right Section: Button */}
-        <div>
-          <Link href="http://localhost:3000">
-            <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-all duration-300">
-              Вход
-            </button>
-          </Link>
-        </div>
-      </nav>
+      <Header rightButtonText="Вход" rightButtonLink="http://localhost:3000" />
 
       {/* Main Content */}
       <div className="flex items-center justify-center min-h-screen bg-gray-100 py-10">
@@ -218,7 +248,7 @@ const Register = () => {
             wrapperClassName="mb-1"
           />
 
-          <Input
+          <TextareaInput
             id="address"
             label="* Адрес:"
             register={register("address", {
@@ -226,6 +256,7 @@ const Register = () => {
             })}
             error={errors.address}
             wrapperClassName="mb-1"
+            rows={2} // You can adjust the number of rows
           />
 
           <Input
@@ -233,6 +264,16 @@ const Register = () => {
             label="* Потребител:"
             register={register("username", {
               required: "Потребителското име е задължително",
+              pattern: {
+                value: /^[a-zA-Z0-9_.-]*$/,
+                message:
+                  "Разрешени са латински букви, цифри, '.', '_' или '-'.",
+              },
+              validate: {
+                noCyrillic: (value: string) =>
+                  !/[\u0400-\u04FF]/.test(value) ||
+                  "Символи на кирилица не са позволени!",
+              },
             })}
             error={errors.username}
             placeholder="philip_philipov"
@@ -257,6 +298,34 @@ const Register = () => {
             error={errors.password}
             placeholder="••••••••"
           />
+
+          {/* Password Strength Indicator */}
+          {passwordValue && passwordValue.length > 0 && (
+            <div className="mt-1 mb-2">
+              {" "}
+              {/* Adjusted margin */}
+              <div className="w-full bg-gray-200 rounded-full h-1.5">
+                <div
+                  className={`h-1.5 rounded-full ${strengthDetails.color} ${strengthDetails.widthClass} transition-all duration-300 ease-in-out`}
+                ></div>
+              </div>
+              {strengthDetails.message && (
+                <p
+                  className={`text-xs mt-1 ${
+                    strengthDetails.color.startsWith("bg-red")
+                      ? "text-red-500"
+                      : strengthDetails.color.startsWith("bg-yellow")
+                      ? "text-yellow-600"
+                      : strengthDetails.color.startsWith("bg-green")
+                      ? "text-green-600"
+                      : "text-gray-600"
+                  }`}
+                >
+                  {strengthDetails.message}
+                </p>
+              )}
+            </div>
+          )}
 
           <PasswordInput
             id="repeatPassword"
@@ -283,31 +352,7 @@ const Register = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-100 py-4">
-        <div className="container mx-auto text-center text-sm text-gray-600">
-          <div className="flex justify-center space-x-4 mb-2">
-            <a href="#" className="hover:text-blue-500">
-              Как да добавя сметка ›
-            </a>
-            <a href="#" className="hover:text-blue-500">
-              Всичко с един потребител (SSO) ›
-            </a>
-            <a href="#" className="hover:text-blue-500">
-              Процес на регистрация ›
-            </a>
-            <a href="#" className="hover:text-blue-500">
-              Електронен подпис ›
-            </a>
-            <a href="#" className="hover:text-blue-500">
-              Такси и комисиони ›
-            </a>
-            <a href="#" className="hover:text-blue-500">
-              Документи ›
-            </a>
-          </div>
-          <p>© Първа инвестиционна банка 2024-2025.</p>
-        </div>
-      </footer>
+      <FooterRegister />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+
 import React from "react";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -7,8 +7,12 @@ import { useRouter } from "next/navigation"; // Import useRouter
 import Input from "@/components/Input"; // Import the new Input component
 import PasswordInput from "@/components/PasswordInput"; // Import the new PasswordInput component
 import Button from "@/components/Button"; // Import the new Button component
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import Header from "@/components/Header";
+import FooterLogin from "@/components/FooterLogin"; // Import the new FooterLogin component
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Card from "@/components/Card";
 
 // Updated Inputs type
 type Inputs = {
@@ -62,46 +66,7 @@ const LogIn = () => {
     <div>
       <ToastContainer />
       {/* Navigation Bar */}
-      <nav className="bg-white shadow-md py-4 px-8 flex justify-between items-center">
-        {/* Left Section: Logo */}
-        <div className="flex items-center">
-          <Image
-            src="/logo-fibank-signature.svg"
-            alt="Fibank Logo"
-            width={150}
-            height={30}
-            className="h-8 w-auto"
-          />
-        </div>
-
-        {/* Center Section: Links */}
-        <div className="flex items-center space-x-8 justify-center">
-          <a href="#" className="text-gray-600 hover:text-blue-500 text-sm">
-            English
-          </a>
-          <a href="#" className="text-gray-600 hover:text-blue-500 text-sm">
-            Към сайта
-          </a>
-          <a href="#" className="text-gray-600 hover:text-blue-500 text-sm">
-            <i className="fab fa-apple"></i> Мобилно приложение{" "}
-          </a>
-          <a href="#" className="text-gray-600 hover:text-blue-500 text-sm">
-            Промени в ОУ и тарифа
-          </a>
-          <a href="#" className="text-gray-600 hover:text-blue-500 text-sm">
-            Помощ
-          </a>
-        </div>
-
-        {/* Right Section: Button */}
-        <div>
-          <Link href="/register">
-            <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-all duration-300">
-              Регистрация
-            </button>
-          </Link>
-        </div>
-      </nav>
+      <Header rightButtonText="Регистрация" rightButtonLink="/register" />
 
       {/* Main Content */}
       <div className="flex justify-center items-start min-h-screen bg-gray-100 py-10 px-4 sm:px-6 lg:px-8">
@@ -224,11 +189,10 @@ const LogIn = () => {
 
           {/* Right Side: Information */}
           <div className="w-full md:w-[28rem] space-y-8">
-            {/* ВАЖНО! Section */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-lg font-semibold text-red-600 mb-2">
-                ВАЖНО!
-              </h3>
+            <Card
+              title="ВАЖНО!"
+              titleClassName="text-lg font-semibold text-red-600 mb-2"
+            >
               <p className="text-sm text-gray-700 mb-3">
                 ПИБ АД УВЕДОМЯВА КАРТОДЪРЖАТЕЛИТЕ си, че има информация за
                 получени фалшиви съобщения по електронната поща, които...
@@ -239,13 +203,9 @@ const LogIn = () => {
               >
                 Прочетете повече ›
               </a>
-            </div>
+            </Card>
 
-            {/* Разгледайте системата Section */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                Разгледайте системата
-              </h3>
+            <Card title="Разгледайте системата">
               <p className="text-sm text-gray-700 mb-3">
                 Разгледайте и усетете онлайн банкирането чрез интерактивната ни
                 демо версия.
@@ -256,13 +216,9 @@ const LogIn = () => {
               >
                 ДЕМО ВЕРСИЯ ›
               </a>
-            </div>
+            </Card>
 
-            {/* Банкиране с Token Section */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                Банкиране с Token
-              </h3>
+            <Card title="Банкиране с Token">
               <div className="flex items-start gap-4">
                 <div className="flex-grow">
                   <p className="text-sm text-gray-700 mb-3">
@@ -284,121 +240,13 @@ const LogIn = () => {
                   className="h-20 w-auto"
                 />
               </div>
-            </div>
+            </Card>
           </div>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-50 text-gray-700 pt-10 pb-8 text-sm">
-        <div className="container mx-auto px-4">
-          {/* Top Contact Section */}
-          <div className="text-center mb-6">
-            <p className="font-semibold mb-3">
-              За всички въпроси нашите служители Ви очакват на:
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-6">
-              <span>
-                <i className="fas fa-phone-alt mr-1 text-blue-600"></i>
-                Телефон:{" "}
-                <a
-                  href="tel:070012777"
-                  className="text-blue-600 font-semibold hover:underline"
-                >
-                  0700 12 777
-                </a>{" "}
-                (денонощно)*
-              </span>
-              <span>
-                <i className="fas fa-envelope mr-1 text-blue-600"></i>
-                E-mail:{" "}
-                <a
-                  href="mailto:e-bank@fibank.bg"
-                  className="text-blue-600 font-semibold hover:underline"
-                >
-                  e-bank@fibank.bg
-                </a>
-              </span>
-              <span>
-                <i className="fas fa-comments mr-1 text-blue-600"></i>
-                Чат:{" "}
-                <a
-                  href="#"
-                  className="text-blue-600 font-semibold hover:underline"
-                >
-                  Пишете ни
-                </a>
-              </span>
-            </div>
-          </div>
-
-          {/* Vivacom Note */}
-          <p className="text-xs text-gray-500 text-center mb-8 max-w-3xl mx-auto">
-            * Разговорите към национален номер 0700 12 777 се таксуват според
-            определените от Вашия оператор цени за обаждане към номера тип 0700
-            на Vivacom. За абонати на Vivacom обаждане към този номер се таксува
-            като обаждане към стационарен номер в мрежата на Vivacom.
-          </p>
-
-          {/* Locations Section */}
-          <div className="text-center mb-8">
-            <p className="font-semibold mb-3">Вижте къде се намираме:</p>
-            <div className="flex justify-center items-center space-x-6">
-              <a href="#" className="text-blue-600 hover:underline">
-                <i className="fas fa-university mr-1"></i> Клонове ›
-              </a>
-              <a href="#" className="text-blue-600 hover:underline">
-                <i className="fas fa-credit-card mr-1"></i> Банкомати ›
-              </a>
-            </div>
-          </div>
-
-          {/* Bottom Links Section */}
-          <div className="flex flex-wrap justify-center space-x-4 sm:space-x-6 mb-6 text-xs sm:text-sm">
-            <a
-              href="#"
-              className="text-gray-600 hover:text-blue-600 hover:underline"
-            >
-              Как да добавя сметка ›
-            </a>
-            <a
-              href="#"
-              className="text-gray-600 hover:text-blue-600 hover:underline"
-            >
-              Всичко с един потребител (SSO) ›
-            </a>
-            <a
-              href="#"
-              className="text-gray-600 hover:text-blue-600 hover:underline"
-            >
-              Процес на регистрация ›
-            </a>
-            <a
-              href="#"
-              className="text-gray-600 hover:text-blue-600 hover:underline"
-            >
-              Електронен подпис ›
-            </a>
-            <a
-              href="#"
-              className="text-gray-600 hover:text-blue-600 hover:underline"
-            >
-              Такси и комисиони ›
-            </a>
-            <a
-              href="#"
-              className="text-gray-600 hover:text-blue-600 hover:underline"
-            >
-              Документи ›
-            </a>
-          </div>
-
-          {/* Copyright */}
-          <p className="text-center text-xs text-gray-500">
-            © Първа инвестиционна банка 2024-2025.
-          </p>
-        </div>
-      </footer>
+      <FooterLogin />
     </div>
   );
 };
