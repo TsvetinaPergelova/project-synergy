@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import HeaderDropdown from "./HeaderDropdown"; // Import the new component
 
 interface DashboardHeaderProps {
   showMenuButton?: boolean;
@@ -16,48 +17,89 @@ export default function DashboardHeader({
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false);
   const [showNotificationsDropdown, setShowNotificationsDropdown] =
-    useState(false); // New state for notifications dropdown
+    useState(false);
 
   const settingsMenuItems = [
-    { name: "Лични данни", href: "#" },
-    { name: "Общи настройки", href: "#" },
-    { name: "Настройки на сметка", href: "#" },
-    { name: "Настройки на депозит", href: "#" },
-    { name: "Настройки на карта", href: "#", highlighted: true },
-    { name: "3D сигурност на карти", href: "#" },
-    { name: "Промяна на парола", href: "#" },
-    { name: "Регистриране на сертификат", href: "#" },
-    { name: "Регистриране на КЕП", href: "#" },
-    { name: "Деблокиране на Token", href: "#", highlighted: true },
-    { name: "Промяна ПИН Token", href: "#" },
-    { name: "E-mail и SMS известяване", href: "#" },
-    { name: "SMS известяване за карти", href: "#" },
-    { name: "Мобилно приложение Fibank", href: "#" },
+    { name: "Лични данни", href: "#", icon: "/user-avatar.png" },
+    { name: "Общи настройки", href: "#", icon: "/SettingsIcon.png" },
+    { name: "Настройки на сметка", href: "#", icon: "/bill-svgrepo-com.svg" },
+    {
+      name: "Настройки на депозит",
+      href: "#",
+      icon: "/deposit-svgrepo-com.svg",
+    },
+    {
+      name: "Настройки на карта",
+      href: "#",
+      icon: "/credit-card-svgrepo-com.svg",
+    },
+    {
+      name: "3D сигурност на карти",
+      href: "#",
+      icon: "/security-card-svgrepo-com.svg",
+    },
+    {
+      name: "Промяна на парола",
+      href: "#",
+      icon: "/padlock-locked-simple-svgrepo-com.svg",
+    },
+    {
+      name: "Регистриране на сертификат",
+      href: "#",
+      icon: "/sertificate-svgrepo-com.svg",
+    },
+    {
+      name: "Регистриране на КЕП",
+      href: "#",
+      icon: "/pen-nib-svgrepo-com.svg",
+    },
+    {
+      name: "Деблокиране на Token",
+      href: "#",
+      highlighted: true,
+      icon: "/token-svgrepo-com.svg",
+    },
+    { name: "Промяна ПИН Token", href: "#", icon: "/token-svgrepo-com.svg" },
+    {
+      name: "E-mail и SMS известяване",
+      href: "#",
+      icon: "/bell-alt-1-svgrepo-com.svg",
+    },
+    {
+      name: "SMS известяване за карти",
+      href: "#",
+      icon: "/sms-organizer-svgrepo-com.svg",
+    },
+    {
+      name: "Мобилно приложение Fibank",
+      href: "#",
+      icon: "/mobile-phone-svgrepo-com.svg",
+    },
   ];
 
   const notificationItems = [
     {
       id: 1,
-      icon: "/CoinIcon.png", // Placeholder for failed transaction icon
-      iconBg: "bg-blue-600", // Icon background color
+      icon: "/CoinIcon.png",
+      iconBg: "bg-blue-600",
       title: "Неуспешен превод",
       description: "Превод с получател НОИ не беше извършен...",
       timestamp: "20/01/2015 16:00",
-      isRead: true, // Mark as read
+      isRead: true,
     },
     {
       id: 2,
-      icon: "/file.svg", // Placeholder for card icon
+      icon: "/file.svg",
       iconBg: "bg-blue-600",
       title: "Нова картова авторизация",
       description: "От карта 401820***2251 бяха изтеглени 100 лв.",
       timestamp: "20/01/2015 14:00",
       actionType: "menu",
-      highlighted: true, // This item has a different background in the image
+      highlighted: true,
     },
     {
       id: 3,
-      icon: "/TokenIcon.png", // Placeholder for token icon (assuming TokenIcon.png exists or is similar to settings/key)
+      icon: "/TokenIcon.png",
       iconBg: "bg-gray-500",
       title: "Успешно активирано Token устройство.",
       description: "Вече можете да ползвате Token устройството си за...",
@@ -65,7 +107,7 @@ export default function DashboardHeader({
     },
     {
       id: 4,
-      icon: "/CoinIcon.png", // Placeholder for loan/payment icon
+      icon: "/CoinIcon.png",
       iconBg: "bg-gray-500",
       title: "Погасяване на кредит",
       description: "Остават 5 дена, за плащане на вноска по кредит...",
@@ -128,162 +170,166 @@ export default function DashboardHeader({
             </span>
           </div>
 
-          {/* Notifications Dropdown (replaces static Notifications display) */}
-          <div className="relative">
-            <button
-              onClick={() =>
-                setShowNotificationsDropdown(!showNotificationsDropdown)
-              }
-              className="flex items-center text-gray-700 text-sm font-medium hover:text-blue-700 cursor-pointer"
-              aria-label="Toggle notifications menu"
-            >
-              <Image
-                src="/NotificationIcon.png"
-                alt="Notifications"
-                width={32}
-                height={32}
-                className="border pr-3"
-              />
-              <span className="material-icons mr-1">ИЗВЕСТИЯ</span>
-              <span className="absolute -top-2 -right-4 bg-red-600 text-white text-xs rounded-full px-1.5">
-                3
-              </span>
-              <Image
-                src="/arrow-down-3101.png"
-                alt="Toggle submenu"
-                width={16}
-                height={16}
-                className={`ml-1 transform transition-transform duration-200 ${
-                  showNotificationsDropdown ? "rotate-180" : "rotate-0"
-                }`}
-              />
-            </button>
-            {showNotificationsDropdown && (
-              <div className="absolute right-0 mt-2 w-96 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                <div className="p-4">
-                  <h3 className="text-sm font-bold text-gray-800 mb-3">
-                    Имате 3 нови известия
-                  </h3>
-                  <ul className="-mx-4">
-                    {notificationItems.map((item) => (
-                      <li
-                        key={item.id}
-                        className={`px-4 py-3 border-b border-gray-100 last:border-b-0 ${
-                          item.highlighted ? "bg-gray-50" : "hover:bg-gray-50"
-                        }`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div
-                            className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${item.iconBg} p-1`}
-                          >
-                            <Image
-                              src={item.icon}
-                              alt=""
-                              width={18}
-                              height={18}
-                              className="filter brightness-0 invert"
-                            />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold text-gray-900 truncate">
-                              {item.title}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-0.5 truncate">
-                              {item.description}
-                            </p>
-                            <p className="text-xs text-gray-400 mt-1">
-                              {item.timestamp}
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-4 text-center border-t border-gray-100 pt-3">
-                    <Link
-                      href="#"
-                      className="text-sm text-blue-600 hover:underline font-medium"
+          {/* Notifications Dropdown */}
+          <HeaderDropdown
+            isOpen={showNotificationsDropdown}
+            setIsOpen={setShowNotificationsDropdown}
+            ariaLabel="Toggle notifications menu"
+            dropdownWidthClass="w-96"
+            buttonContent={
+              <>
+                <Image
+                  src="/NotificationIcon.png"
+                  alt="Notifications"
+                  width={32}
+                  height={32}
+                  className="border pr-3"
+                />
+                <span className="material-icons mr-1">ИЗВЕСТИЯ</span>
+                <span className="absolute -top-2 -right-4 bg-red-600 text-white text-xs rounded-full px-1.5">
+                  3
+                </span>
+                <Image
+                  src="/arrow-down-3101.png"
+                  alt="Toggle submenu"
+                  width={16}
+                  height={16}
+                  className={`ml-1 transform transition-transform duration-200 ${
+                    showNotificationsDropdown ? "rotate-180" : "rotate-0"
+                  }`}
+                />
+              </>
+            }
+            dropdownContent={
+              <div className="p-4">
+                <h3 className="text-sm font-bold text-gray-800 mb-3">
+                  Имате 3 нови известия
+                </h3>
+                <ul className="-mx-4">
+                  {notificationItems.map((item) => (
+                    <li
+                      key={item.id}
+                      className={`px-4 py-3 border-b border-gray-100 last:border-b-0 ${
+                        item.highlighted ? "bg-gray-50" : "hover:bg-gray-50"
+                      }`}
                     >
-                      Вижте всички известия &gt;
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Settings Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setShowSettingsDropdown(!showSettingsDropdown)}
-              className="flex items-center text-gray-700 text-sm font-medium hover:text-blue-700 cursor-pointer"
-              aria-label="Toggle settings menu"
-            >
-              <Image
-                src="/SettingsIcon.png"
-                alt="Settings"
-                width={32}
-                height={32}
-                className="border pr-3"
-              />
-              <span className="material-icons mr-1">НАСТРОЙКИ</span>
-              <Image
-                src="/arrow-down-3101.png"
-                alt="Toggle submenu"
-                width={16}
-                height={16}
-                className={`ml-1 transform transition-transform duration-200 ${
-                  showSettingsDropdown ? "rotate-180" : "rotate-0"
-                }`}
-              />
-            </button>
-            {showSettingsDropdown && (
-              <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 rounded-md shadow-lg z-50 py-1">
-                <ul>
-                  {settingsMenuItems.map((item) => (
-                    <li key={item.name}>
-                      <a
-                        href={item.href}
-                        className={`flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
-                          item.highlighted ? "bg-gray-100 text-blue-700" : ""
-                        }`}
-                        onClick={() => setShowSettingsDropdown(false)}
-                      >
-                        <span>{item.name}</span>
-                      </a>
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${item.iconBg} p-1`}
+                        >
+                          <Image
+                            src={item.icon}
+                            alt=""
+                            width={18}
+                            height={18}
+                            className="filter brightness-0 invert"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-gray-800 truncate">
+                            {item.title}
+                          </p>
+                          <p className="text-xs text-gray-500 truncate">
+                            {item.description}
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            {item.timestamp}
+                          </p>
+                        </div>
+                      </div>
                     </li>
                   ))}
                 </ul>
+                <div className="mt-4 text-center border-t border-gray-100 pt-3">
+                  <Link
+                    href="#"
+                    className="text-sm text-blue-600 hover:underline font-medium"
+                    onClick={() => setShowNotificationsDropdown(false)}
+                  >
+                    Вижте всички известия &gt;
+                  </Link>
+                </div>
               </div>
-            )}
-          </div>
+            }
+          />
+
+          {/* Settings Dropdown */}
+          <HeaderDropdown
+            isOpen={showSettingsDropdown}
+            setIsOpen={setShowSettingsDropdown}
+            ariaLabel="Toggle settings menu"
+            dropdownWidthClass="w-72"
+            buttonContent={
+              <>
+                <Image
+                  src="/SettingsIcon.png"
+                  alt="Settings"
+                  width={32}
+                  height={32}
+                  className="border pr-3"
+                />
+                <span className="material-icons mr-1">НАСТРОЙКИ</span>
+                <Image
+                  src="/arrow-down-3101.png"
+                  alt="Toggle submenu"
+                  width={16}
+                  height={16}
+                  className={`ml-1 transform transition-transform duration-200 ${
+                    showSettingsDropdown ? "rotate-180" : "rotate-0"
+                  }`}
+                />
+              </>
+            }
+            dropdownContent={
+              <ul>
+                {settingsMenuItems.map((item) => (
+                  <li key={item.name}>
+                    <a
+                      href={item.href}
+                      className={`flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
+                        item.highlighted ? "bg-gray-100 text-blue-700" : ""
+                      }`}
+                      onClick={() => setShowSettingsDropdown(false)}
+                    >
+                      {item.icon && (
+                        <Image src={item.icon} alt="" width={16} height={16} />
+                      )}
+                      <span>{item.name}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            }
+          />
 
           {/* Profile Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-              className="flex items-center cursor-pointer"
-              aria-label="Toggle profile menu"
-            >
-              <Image
-                src="/user-avatar.png"
-                alt="User"
-                width={32}
-                height={32}
-                className="rounded-full border"
-              />
-              <Image
-                src="/arrow-down-3101.png"
-                alt="Toggle submenu"
-                width={16}
-                height={16}
-                className={`ml-2 transform transition-transform duration-200 ${
-                  showProfileDropdown ? "rotate-180" : "rotate-0"
-                }`}
-              />
-            </button>
-            {showProfileDropdown && (
-              <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+          <HeaderDropdown
+            isOpen={showProfileDropdown}
+            setIsOpen={setShowProfileDropdown}
+            ariaLabel="Toggle profile menu"
+            dropdownWidthClass="w-72"
+            buttonContent={
+              <>
+                <Image
+                  src="/user-avatar.png"
+                  alt="User"
+                  width={32}
+                  height={32}
+                  className="rounded-full border"
+                />
+                <Image
+                  src="/arrow-down-3101.png"
+                  alt="Toggle submenu"
+                  width={16}
+                  height={16}
+                  className={`ml-2 transform transition-transform duration-200 ${
+                    showProfileDropdown ? "rotate-180" : "rotate-0"
+                  }`}
+                />
+              </>
+            }
+            dropdownContent={
+              <>
                 <div className="p-4 border-b border-gray-200">
                   <div className="flex items-center gap-3">
                     <Image
@@ -328,25 +374,25 @@ export default function DashboardHeader({
                           className="flex items-center justify-between p-2 rounded-md hover:bg-gray-100 text-sm text-gray-700"
                           onClick={() => setShowProfileDropdown(false)}
                         >
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
                             <Image
                               src={client.avatar}
                               alt={client.name}
-                              width={32}
-                              height={32}
+                              width={24}
+                              height={24}
                               className="rounded-full"
                             />
                             <span>{client.name}</span>
                           </div>
-                          <span className="text-gray-400">&gt;</span>
+                          <span className="text-blue-600 text-xs">&gt;</span>
                         </a>
                       </li>
                     ))}
                   </ul>
                 </div>
-              </div>
-            )}
-          </div>
+              </>
+            }
+          />
           <Link
             href="/logout"
             className="flex items-center text-gray-700 hover:text-blue-700"
