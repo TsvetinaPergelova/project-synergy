@@ -193,7 +193,9 @@ export default function Sidebar() {
     {
       type: "item",
       label: "Задължения очакващи плащане",
-      onClick: () => console.log("Clicked: Задължения очакващи плащане"),
+      onClick: () => {
+        window.location.hash = "задължения-очакващи-плащане";
+      },
     },
     {
       type: "item",
@@ -367,18 +369,18 @@ export default function Sidebar() {
             />
             Депозити
           </Link>
-          <Link
-            href="/dashboard/cards"
+          <a // Changed from Link to a
+            href="#карти" // Changed to anchor link
             className="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100 text-gray-700 font-medium"
           >
             <Image
               src="/credit-card-svgrepo-com.svg"
-              alt="Сметки Icon"
+              alt="Карти Icon" // Changed alt text
               width={20}
               height={20}
             />
             Карти
-          </Link>
+          </a>
           <a // Changed from Link to a
             href="#преводи-за-подпис" // Changed to anchor link
             className="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100 text-gray-700 font-medium relative"

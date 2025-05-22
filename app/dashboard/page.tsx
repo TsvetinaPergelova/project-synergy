@@ -58,6 +58,66 @@ interface CardData {
   checked?: boolean;
 }
 
+// Define an interface for pending payment data
+interface PendingPaymentData {
+  id: string;
+  name: string;
+  iconPath: string;
+  date: string; // "Към дата"
+  autoPayment: "Да" | "Не" | "N/a"; // "Автом. плащане"
+  amount: string; // "Сума"
+  currency: string;
+  infoIconPath: string;
+  checked?: boolean; // For the checkbox
+}
+
+// Interface for Last 5 Transfers
+interface LastTransactionData {
+  id: string;
+  typeIconPath: string;
+  date: string;
+  documentName: string;
+  documentRef: string;
+  recipientPayer: string;
+  account: string;
+  amountIconPath: string;
+  amount: string;
+  currency: string;
+}
+
+// Define an interface for credit data
+interface CreditData {
+  id: string;
+  type: string;
+  size: string;
+  currency: string;
+  interestRate: string;
+  monthlyPayment: string;
+  paymentDate: string;
+  dueDate: string;
+  iconPath: string;
+  progressColor: string;
+  progressWidth: string;
+}
+
+// Define an interface for deposit data
+interface DepositData {
+  id: string;
+  depositIconPath: string;
+  name: string;
+  accountNumber: string;
+  currency: string;
+  availability: string;
+  accruedInterest: string;
+  maturityDate: string;
+  maturityProgress: number;
+  daysRemaining?: number;
+  actionIcon1Path: string;
+  actionIcon2Path: string;
+  actionIcon3Path: string;
+  actionIcon4Path: string;
+}
+
 export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Default to open on dashboard
 
@@ -171,10 +231,10 @@ export default function Home() {
       availability: "17 500.00",
       obligations: "12 000.00",
       minContribution: "2 000.00",
-      dueDate: "05/02/2015",
+      dueDate: "05/08/2025",
       dueProgress: 30, // Example progress
       security3DStatus: "Активна",
-      security3DIconPath: "/3d-secure-active.svg", // Replace with actual path
+      security3DIconPath: "/Active3DCard.png",
       checked: true,
     },
     {
@@ -186,10 +246,10 @@ export default function Home() {
       availability: "3 000.00",
       obligations: "2 000.00",
       minContribution: "200.00",
-      dueDate: "05/02/2015",
+      dueDate: "05/08/2025",
       dueProgress: 60, // Example progress
       security3DStatus: "Неактивирана",
-      security3DIconPath: "/3d-secure-inactive.svg", // Replace with actual path
+      security3DIconPath: "/NotActivated3Dcard.png",
       checked: true,
     },
     {
@@ -201,10 +261,215 @@ export default function Home() {
       availability: "10.01",
       obligations: "20.00",
       minContribution: "2.50",
-      dueDate: "05/02/2015",
+      dueDate: "05/08/2025",
       dueProgress: 10, // Example progress
       security3DStatus: "Неактивирана",
-      security3DIconPath: "/3d-secure-inactive.svg", // Replace with actual path
+      security3DIconPath: "/NotActivated3Dcard.png",
+    },
+  ];
+
+  // Sample data for the pending payments table
+  const pendingPaymentsData: PendingPaymentData[] = [
+    {
+      id: "p1",
+      name: "Сметка за ток (офис)",
+      iconPath: "/plug-plugin-svgrepo-com.svg",
+      date: "20/01/2026",
+      autoPayment: "Не",
+      amount: "25.00",
+      currency: "BGN",
+      infoIconPath: "/info-svgrepo-com.svg",
+      checked: false,
+    },
+    {
+      id: "p2",
+      name: "Сметка за парно (офис)",
+      iconPath: "/health-medical-medicine-termometer-svgrepo-com.svg",
+      date: "20/01/2026",
+      autoPayment: "Не",
+      amount: "22 500.00",
+      currency: "BGN",
+      infoIconPath: "/info-svgrepo-com.svg",
+      checked: true,
+    },
+    {
+      id: "p3",
+      name: "Vivacom (Личен GSM)",
+      iconPath: "/mobile-phone-svgrepo-com.svg",
+      date: "18/09/2025",
+      autoPayment: "Да",
+      amount: "70.00",
+      currency: "BGN",
+      infoIconPath: "/info-svgrepo-com.svg",
+      checked: true,
+    },
+    {
+      id: "p4",
+      name: "Такса смет",
+      iconPath: "/credit-card-pay-svgrepo-com.svg",
+      date: "31/12/2025",
+      autoPayment: "N/a",
+      amount: "36.45",
+      currency: "BGN",
+      infoIconPath: "/info-svgrepo-com.svg",
+      checked: true,
+    },
+  ];
+
+  // Sample data for the Last 5 Transfers table
+  const lastTransactionsData: LastTransactionData[] = [
+    {
+      id: "lt1",
+      typeIconPath: "/GreenArrow.png",
+      date: "18/05/2025",
+      documentName: "Получен превод в лева",
+      documentRef: "HDOPIUB150752806",
+      recipientPayer: "Йордан Йорданов Геновски",
+      account: "BG57FINV915010BGN0WQDF",
+      amountIconPath: "/GreenPlus.png",
+      amount: "210 500.00",
+      currency: "BGN",
+    },
+    {
+      id: "lt2",
+      typeIconPath: "/GreenArrow.png",
+      date: "17/05/2025",
+      documentName: "Получен превод във валута",
+      documentRef: "HDOPIUB143286034",
+      recipientPayer: "UAB PARVUS FINANCE GROUP",
+      account: "LT527300010136139978",
+      amountIconPath: "/GreenPlus.png",
+      amount: "1 000 300.00",
+      currency: "USD",
+    },
+    {
+      id: "lt3",
+      typeIconPath: "/RedArrow.png",
+      date: "15/05/2025",
+      documentName: "Кредитен превод",
+      documentRef: "S24PWUB143250023",
+      recipientPayer: "Филип Илиев Филипов",
+      account: "BG14FINV915010BGN0VWVT",
+      amountIconPath: "/RedMinus.png",
+      amount: "2 300 750.00",
+      currency: "BGN",
+    },
+    {
+      id: "lt4",
+      typeIconPath: "/GreenArrow.png",
+      date: "13/05/2025",
+      documentName: "Получен превод в лева",
+      documentRef: "HDOPIUB142458275",
+      recipientPayer: "WHIZ EOOD",
+      account: "BG57FINV915010BGN0WQDF",
+      amountIconPath: "/GreenPlus.png",
+      amount: "500.00",
+      currency: "BGN",
+    },
+    {
+      id: "lt5",
+      typeIconPath: "/RedArrow.png",
+      date: "12/05/2025",
+      documentName: "Вътрешнобанков превод",
+      documentRef: "S18FTRQ143300001",
+      recipientPayer: "Филип Илиев Филипов",
+      account: "BG44FINV91501004592444",
+      amountIconPath: "/RedMinus.png",
+      amount: "100.00",
+      currency: "USD",
+    },
+  ];
+
+  // Sample data for the credits table
+  const creditsData: CreditData[] = [
+    {
+      id: "1",
+      type: "Потребителски кредит",
+      size: "10 000.00",
+      currency: "BGN",
+      interestRate: "7.70%",
+      monthlyPayment: "200.00",
+      paymentDate: "05/02/2025",
+      dueDate: "05/12/2026",
+      iconPath: "/credits-svgrepo-com.svg",
+      progressColor: "bg-green-500",
+      progressWidth: "w-3/4",
+    },
+    {
+      id: "2",
+      type: 'Жилищен кредит "Право на избор"',
+      size: "300 000.00",
+      currency: "EUR",
+      interestRate: "5.80%",
+      monthlyPayment: "2 200.00",
+      paymentDate: "25/01/2025",
+      dueDate: "05/03/2030",
+      iconPath: "/credits-svgrepo-com.svg",
+      progressColor: "bg-red-500",
+      progressWidth: "w-1/2",
+    },
+    {
+      id: "3",
+      type: "Супер кредит",
+      size: "150 000.00",
+      currency: "USD",
+      interestRate: "6.50%",
+      monthlyPayment: "2 662.00",
+      paymentDate: "30/01/2025",
+      dueDate: "05/07/2026",
+      iconPath: "/credits-svgrepo-com.svg",
+      progressColor: "bg-yellow-500",
+      progressWidth: "w-2/3",
+    },
+  ];
+
+  // Sample data for the deposits table
+  const depositsData: DepositData[] = [
+    {
+      id: "dep1",
+      depositIconPath: "/deposit-svgrepo-com.svg",
+      name: "Свободен депозит - 12 м.",
+      accountNumber: "91502016356335",
+      currency: "USD",
+      availability: "30 000 000.00", // As per OCR
+      accruedInterest: "20 000.00", // As per OCR
+      maturityDate: "31/07/2025",
+      maturityProgress: 70, // Estimated from image
+      actionIcon1Path: "/edit-2-svgrepo-com.svg", // Placeholder for first action icon
+      actionIcon2Path: "/list-circle-svgrepo-com.svg", // List/details icon
+      actionIcon3Path: "/CoinIcon.png", // "Нов превод" icon
+      actionIcon4Path: "/MessageIcon.png", // Message/notification icon
+    },
+    {
+      id: "dep2",
+      depositIconPath: "/deposit-svgrepo-com.svg",
+      name: "Ср. депозит - физ. лица - 6 м.",
+      accountNumber: "915010BGNOUCTZ",
+      currency: "BGN",
+      availability: "100 000.00",
+      accruedInterest: "1 300.00",
+      maturityDate: "03/03/2025",
+      maturityProgress: 85, // Estimated from image
+      daysRemaining: 145,
+      actionIcon1Path: "/edit-2-svgrepo-com.svg",
+      actionIcon2Path: "/list-circle-svgrepo-com.svg",
+      actionIcon3Path: "/CoinIcon.png",
+      actionIcon4Path: "/MessageIcon.png",
+    },
+    {
+      id: "dep3",
+      depositIconPath: "/deposit-svgrepo-com.svg",
+      name: 'Депозит "6 x 6"',
+      accountNumber: "91501004592050",
+      currency: "EUR",
+      availability: "50 000.00",
+      accruedInterest: "920.00",
+      maturityDate: "05/10/2025", // Date partially obscured, using an example
+      maturityProgress: 45, // Estimated from image
+      actionIcon1Path: "/edit-2-svgrepo-com.svg",
+      actionIcon2Path: "/list-circle-svgrepo-com.svg",
+      actionIcon3Path: "/CoinIcon.png",
+      actionIcon4Path: "/MessageIcon.png",
     },
   ];
 
@@ -296,8 +561,8 @@ export default function Home() {
                         <Image
                           src={account.iconPath}
                           alt="Account type"
-                          width={20} // Added width
-                          height={20} // Added height
+                          width={20}
+                          height={20}
                           className="mr-3 flex-shrink-0"
                         />
                         <div>
@@ -333,8 +598,8 @@ export default function Home() {
                         <Image
                           src={account.actionIconPath}
                           alt={account.actionTooltip}
-                          width={20} // Added width
-                          height={20} // Added height
+                          width={20}
+                          height={20}
                         />
                       </button>
                     </td>
@@ -385,9 +650,7 @@ export default function Home() {
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Действия
-                  </th>
+                  ></th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -651,9 +914,471 @@ export default function Home() {
               </tfoot>
             </table>
           </DashboardSection>
+
+          {/* Pending Payments Table Section */}
+          <DashboardSection
+            title="ЗАДЪЛЖЕНИЯ ОЧАКВАЩИ ПЛАЩАНЕ"
+            sectionId="задължения-очакващи-плащане"
+          >
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    <input
+                      type="checkbox"
+                      className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                      // Add logic for select/deselect all if needed
+                    />
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Наименование
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Към дата
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center"
+                  >
+                    Автом. плащане
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center"
+                  >
+                    Сума
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    {/* Actions/Info Header - can be empty or have a title */}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {pendingPaymentsData.map((payment) => (
+                  <tr key={payment.id}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <input
+                        type="checkbox"
+                        className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                        defaultChecked={payment.checked}
+                        // Add onChange handler if individual selection is needed
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <Image
+                          src={payment.iconPath}
+                          alt="" // Alt text can be improved if needed
+                          width={32} // Increased size
+                          height={32} // Increased size
+                          className="mr-3 flex-shrink-0 h-8 w-8 rounded-full bg-gray-200 p-1" // Adjusted Tailwind classes
+                        />
+                        <div className="text-sm font-medium text-gray-900">
+                          {payment.name}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {payment.date}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                      {payment.autoPayment}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 text-right">
+                      {payment.amount} {payment.currency}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
+                      <button
+                        title="Информация"
+                        className="p-1 hover:bg-gray-100 rounded"
+                      >
+                        <Image
+                          src={payment.infoIconPath}
+                          alt="Информация"
+                          width={20}
+                          height={20}
+                        />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot className="bg-gray-50">
+                <tr>
+                  <td colSpan={6} className="px-6 py-4 text-left">
+                    <button className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700">
+                      ПЛАТЕТЕ &gt;
+                    </button>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </DashboardSection>
+
+          {/* Last 5 Transfers Table Section */}
+          <DashboardSection
+            title="ПОСЛЕДНИ 5 ПРЕВОДА"
+            sectionId="последни-5-превода"
+          >
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Тип
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Дата
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Документ и референция
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Получател/наредител
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Сметка
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Сума и валута
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {lastTransactionsData.map((transaction) => (
+                  <tr key={transaction.id}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <Image
+                        src={transaction.typeIconPath}
+                        alt="Transaction type"
+                        width={32}
+                        height={32}
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {transaction.date}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <a href="#" className="text-blue-600 hover:underline">
+                        {transaction.documentName}
+                      </a>
+                      <div className="text-xs text-gray-500">
+                        {transaction.documentRef}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {transaction.recipientPayer}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {transaction.account}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <div className="flex items-center">
+                        <Image
+                          src={transaction.amountIconPath}
+                          alt="Amount sign"
+                          width={16}
+                          height={16}
+                          className="mr-1"
+                        />
+                        {transaction.amount} {transaction.currency}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </DashboardSection>
+
+          {/* Credits Table Section */}
+          <DashboardSection title="КРЕДИТИ" sectionId="кредити">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    <input
+                      type="checkbox"
+                      className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    />
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Вид кредит
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Валута
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Лихвен %
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Дължима вноска
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Дата за вноска
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Падеж
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {creditsData.map((credit) => (
+                  <tr key={credit.id}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <input
+                        type="checkbox"
+                        className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <Image
+                          src={credit.iconPath}
+                          alt="Credit type"
+                          width={24}
+                          height={24}
+                          className="mr-3 flex-shrink-0"
+                        />
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {credit.type}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            Размер: {credit.size}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {credit.currency}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {credit.interestRate}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-medium text-center">
+                      {credit.monthlyPayment}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div>{credit.paymentDate}</div>
+                      <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mt-1">
+                        <div
+                          className={`${credit.progressColor} h-2.5 rounded-full ${credit.progressWidth}`}
+                        ></div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {credit.dueDate}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot className="bg-gray-50">
+                <tr>
+                  <td
+                    colSpan={7}
+                    className="px-6 py-4 whitespace-nowrap text-left"
+                  >
+                    <button className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded">
+                      ПЛАТЕТЕ &gt;
+                    </button>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </DashboardSection>
+
+          {/* Deposits Section */}
+          <DashboardSection title="ДЕПОЗИТИ" sectionId="deposits">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm text-left text-gray-500 divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Депозит
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Валута
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Разполагаемост
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Натрупана лихва
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Падеж
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Действия
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {depositsData.map((deposit) => (
+                    <tr key={deposit.id}>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center">
+                          <Image
+                            src={deposit.depositIconPath}
+                            alt="deposit icon"
+                            width={24}
+                            height={24}
+                            className="mr-3 flex-shrink-0"
+                          />
+                          <div>
+                            <div className="font-medium text-gray-900">
+                              {deposit.name}
+                            </div>
+                            <div className="text-xs text-blue-600 hover:underline cursor-pointer">
+                              {deposit.accountNumber} &gt;
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">{deposit.currency}</td>
+                      <td className="px-6 py-4">{deposit.availability}</td>
+                      <td className="px-6 py-4">{deposit.accruedInterest}</td>
+                      <td className="px-6 py-4">
+                        <div>{deposit.maturityDate}</div>
+                        <div
+                          className="w-full bg-gray-200 rounded-full h-1.5 mt-1"
+                          title={
+                            deposit.daysRemaining
+                              ? `Остават ${deposit.daysRemaining} дни`
+                              : undefined
+                          }
+                        >
+                          <div
+                            className="bg-blue-600 h-1.5 rounded-full"
+                            style={{ width: `${deposit.maturityProgress}%` }}
+                          ></div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex space-x-1">
+                          <button
+                            className="p-1 hover:bg-gray-100 rounded"
+                            title="Редактирай"
+                          >
+                            <Image
+                              src={deposit.actionIcon1Path}
+                              alt="Action 1"
+                              width={18}
+                              height={18}
+                            />
+                          </button>
+                          <button
+                            className="p-1 hover:bg-gray-100 rounded"
+                            title="Извлечение"
+                          >
+                            <Image
+                              src={deposit.actionIcon2Path}
+                              alt="Action 2"
+                              width={18}
+                              height={18}
+                            />
+                          </button>
+                          <button
+                            className="p-1 hover:bg-gray-100 rounded"
+                            title="Нов превод"
+                          >
+                            <Image
+                              src={deposit.actionIcon3Path}
+                              alt="Нов превод"
+                              width={18}
+                              height={18}
+                            />
+                          </button>
+                          <button
+                            className="p-1 hover:bg-gray-100 rounded"
+                            title="Съобщение"
+                          >
+                            <Image
+                              src={deposit.actionIcon4Path}
+                              alt="Action 4"
+                              width={18}
+                              height={18}
+                            />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </DashboardSection>
         </main>
       </div>
-      <div className="w-full">
+      <div className="w-full bg-gray-50">
         {" "}
         {/* Footer container, no longer fixed */}
         <FooterRegister />
