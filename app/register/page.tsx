@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css"; // Import toastify styles
 import Header from "@/components/Header"; // Import the new Header component
 import FooterRegister from "@/components/FooterRegister"; // Import the new FooterRegister component
 import TextareaInput from "@/components/TextAreaInput";
+import { emailPattern, passwordPattern } from "@/utils/validation"; // Import validation patterns
 
 // Define an interface for your form inputs
 interface IRegisterInputs {
@@ -66,9 +67,7 @@ const Register = () => {
       currentColor = "bg-red-500";
       currentWidthClass = "w-1/4";
     } else if (len >= 10) {
-      const meetsPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{10,}$/.test(
-        passwordValue
-      );
+      const meetsPattern = passwordPattern.test(passwordValue);
 
       if (!meetsPattern) {
         currentMessage = "Паролата е твърде слаба.";
@@ -216,7 +215,7 @@ const Register = () => {
               required: "Името на латиница е задължително",
               pattern: {
                 value: /^[a-zA-Z\s]+$/,
-                message: "Името трябва да съдържььча само букви на латиница",
+                message: "Името трябва да съдържа само букви на латиница",
               },
             })}
             error={errors.nameLatin}
@@ -230,7 +229,7 @@ const Register = () => {
             register={register("email", {
               required: "Имейлът е задължителен",
               pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                value: emailPattern,
                 message: "Невалиден имейл адрес",
               },
             })}
@@ -290,7 +289,7 @@ const Register = () => {
                 message: "Паролата трябва да е поне 10 символа",
               },
               pattern: {
-                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{10,}$/,
+                value: passwordPattern,
                 message:
                   "Паролата трябва да съдържа поне една малка буква, една главна буква и една цифра",
               },
