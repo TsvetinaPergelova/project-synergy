@@ -1,8 +1,11 @@
 "use client";
+
 // import Link from "next/link";
 import DashboardHeader from "@/components/DashboardHeader";
 import Sidebar from "@/components/Sidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import "../../locales/i18n"; // Import i18n for translation
 import FooterRegister from "@/components/FooterRegister";
 import InfoCard from "@/components/InfoCard";
 import Image from "next/image"; // Added import for Image component
@@ -12,7 +15,7 @@ import DashboardSection from "@/components/DashboardSection"; // Added import fo
 interface AccountData {
   id: string;
   iconPath: string;
-  type: string;
+  typeKey: string;
   accountNumber: string;
   currency: string;
   availability: string;
@@ -20,14 +23,14 @@ interface AccountData {
   currentBalance: string;
   dueTaxes: string;
   actionIconPath: string;
-  actionTooltip: string;
+  actionTooltipKey: string;
 }
 
 // Define an interface for transaction data
 interface TransactionData {
   id: string;
-  paymentType: string;
-  paymentSubType: string;
+  paymentTypeKey: string;
+  paymentSubTypeKey: string;
   payerName: string;
   payerAccount: string;
   receiverName: string;
@@ -44,7 +47,7 @@ interface TransactionData {
 // Define an interface for card data
 interface CardData {
   id: string;
-  cardType: string; // e.g., "MasterCard Standard", "Visa Electron"
+  cardTypeKey: string; // e.g., "MasterCard Standard", "Visa Electron"
   cardNumberLast4: string;
   cardIconPath: string; // Path to MasterCard or Visa icon
   currency: string;
@@ -53,7 +56,7 @@ interface CardData {
   minContribution: string;
   dueDate: string; // Format "DD/MM/YYYY"
   dueProgress: number; // Percentage for the progress bar (0-100)
-  security3DStatus: "Активна" | "Неактивирана"; // Activated or Not Activated
+  security3DStatusKey: "Активна" | "Неактивирана"; // Activated or Not Activated
   security3DIconPath: string; // Path to 3D secure icon (green/red)
   checked?: boolean;
 }
@@ -61,10 +64,10 @@ interface CardData {
 // Define an interface for pending payment data
 interface PendingPaymentData {
   id: string;
-  name: string;
+  nameKey: string;
   iconPath: string;
   date: string; // "Към дата"
-  autoPayment: "Да" | "Не" | "N/a"; // "Автом. плащане"
+  autoPaymentKey: "Да" | "Не" | "N/a"; // "Автом. плащане"
   amount: string; // "Сума"
   currency: string;
   infoIconPath: string;
@@ -76,7 +79,7 @@ interface LastTransactionData {
   id: string;
   typeIconPath: string;
   date: string;
-  documentName: string;
+  documentNameKey: string;
   documentRef: string;
   recipientPayer: string;
   account: string;
@@ -88,7 +91,7 @@ interface LastTransactionData {
 // Define an interface for credit data
 interface CreditData {
   id: string;
-  type: string;
+  typeKey: string;
   size: string;
   currency: string;
   interestRate: string;
@@ -104,7 +107,7 @@ interface CreditData {
 interface DepositData {
   id: string;
   depositIconPath: string;
-  name: string;
+  nameKey: string;
   accountNumber: string;
   currency: string;
   availability: string;
@@ -120,6 +123,13 @@ interface DepositData {
 
 export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Default to open on dashboard
+  const { t, i18n } = useTranslation(); // Initialize translation function
+
+  useEffect(() => {
+    if (document.documentElement) {
+      document.documentElement.lang = i18n.language;
+    }
+  }, [i18n.language]); // Add i18n.language as a dependency
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -130,7 +140,7 @@ export default function Home() {
     {
       id: "1",
       iconPath: "/bill-svgrepo-com.svg", // Using available icon
-      type: "Разпл. сметка физ. лица",
+      typeKey: "Разпл. сметка физ. лица",
       accountNumber: "915010BGN0VWVT",
       currency: "BGN",
       availability: "50 150 000.00",
@@ -138,12 +148,12 @@ export default function Home() {
       currentBalance: "50 150 000.00",
       dueTaxes: "2.33",
       actionIconPath: "/CoinIcon.png", // Using available icon
-      actionTooltip: "Нов превод",
+      actionTooltipKey: "Нов превод",
     },
     {
       id: "2",
       iconPath: "/bill-svgrepo-com.svg",
-      type: "Свободна разпл. сметка",
+      typeKey: "Свободна разпл. сметка",
       accountNumber: "915010BGN0WQDF",
       currency: "BGN",
       availability: "25 000.00",
@@ -151,12 +161,12 @@ export default function Home() {
       currentBalance: "25 000.00",
       dueTaxes: "3.50",
       actionIconPath: "/CoinIcon.png",
-      actionTooltip: "Нов превод",
+      actionTooltipKey: "Нов превод",
     },
     {
       id: "3",
       iconPath: "/bill-svgrepo-com.svg",
-      type: "Разпл. сметка физ. лица",
+      typeKey: "Разпл. сметка физ. лица",
       accountNumber: "91501004592444",
       currency: "USD",
       availability: "0.01",
@@ -164,7 +174,7 @@ export default function Home() {
       currentBalance: "0.01",
       dueTaxes: "2.74",
       actionIconPath: "/CoinIcon.png",
-      actionTooltip: "Нов превод",
+      actionTooltipKey: "Нов превод",
     },
   ];
 
@@ -172,8 +182,8 @@ export default function Home() {
   const transactionsData: TransactionData[] = [
     {
       id: "t1",
-      paymentType: "Преводно нареждане",
-      paymentSubType: "Вътрешнобанков превод",
+      paymentTypeKey: "Преводно нареждане",
+      paymentSubTypeKey: "Вътрешнобанков превод",
       payerName: "Филип Илиев Филипов",
       payerAccount: "BG14FINV915010BGN0VWVT",
       receiverName: "Бортис ООД",
@@ -188,8 +198,8 @@ export default function Home() {
     },
     {
       id: "t2",
-      paymentType: "Преводно нареждане",
-      paymentSubType: "Кредитен превод",
+      paymentTypeKey: "Преводно нареждане",
+      paymentSubTypeKey: "Кредитен превод",
       payerName: "Филип Илиев Филипов",
       payerAccount: "BG14FINV915010BGN0VWVT",
       receiverName: "Нимбус ООД",
@@ -204,8 +214,8 @@ export default function Home() {
     },
     {
       id: "t3",
-      paymentType: "Преводно нареждане",
-      paymentSubType: "Превод собствени сметки",
+      paymentTypeKey: "Преводно нареждане",
+      paymentSubTypeKey: "Превод собствени сметки",
       payerName: "Филип Илиев Филипов",
       payerAccount: "BG57FINV915010BGN0WQDF",
       receiverName: "УИЗ ЕООД",
@@ -224,7 +234,7 @@ export default function Home() {
   const cardsData: CardData[] = [
     {
       id: "c1",
-      cardType: "MasterCard Standard",
+      cardTypeKey: "MasterCard Standard",
       cardNumberLast4: "2251",
       cardIconPath: "/Mastercard.png", // Updated path
       currency: "BGN",
@@ -233,13 +243,13 @@ export default function Home() {
       minContribution: "2 000.00",
       dueDate: "05/08/2025",
       dueProgress: 30, // Example progress
-      security3DStatus: "Активна",
+      security3DStatusKey: "Активна",
       security3DIconPath: "/Active3DCard.png",
       checked: true,
     },
     {
       id: "c2",
-      cardType: "Visa Electron",
+      cardTypeKey: "Visa Electron",
       cardNumberLast4: "1482",
       cardIconPath: "/hd-visa-payment-logo-png-7017516947777256ndfrewd52.png", // Updated path
       currency: "EUR",
@@ -248,13 +258,13 @@ export default function Home() {
       minContribution: "200.00",
       dueDate: "05/08/2025",
       dueProgress: 60, // Example progress
-      security3DStatus: "Неактивирана",
+      security3DStatusKey: "Неактивирана",
       security3DIconPath: "/NotActivated3Dcard.png",
       checked: true,
     },
     {
       id: "c3",
-      cardType: "MasterCard Standard",
+      cardTypeKey: "MasterCard Standard",
       cardNumberLast4: "9640",
       cardIconPath: "/Mastercard.png", // Updated path
       currency: "USD",
@@ -263,7 +273,7 @@ export default function Home() {
       minContribution: "2.50",
       dueDate: "05/08/2025",
       dueProgress: 10, // Example progress
-      security3DStatus: "Неактивирана",
+      security3DStatusKey: "Неактивирана",
       security3DIconPath: "/NotActivated3Dcard.png",
     },
   ];
@@ -272,10 +282,10 @@ export default function Home() {
   const pendingPaymentsData: PendingPaymentData[] = [
     {
       id: "p1",
-      name: "Сметка за ток (офис)",
+      nameKey: "Сметка за ток (офис)",
       iconPath: "/plug-plugin-svgrepo-com.svg",
       date: "20/01/2026",
-      autoPayment: "Не",
+      autoPaymentKey: "Не",
       amount: "25.00",
       currency: "BGN",
       infoIconPath: "/info-svgrepo-com.svg",
@@ -283,10 +293,10 @@ export default function Home() {
     },
     {
       id: "p2",
-      name: "Сметка за парно (офис)",
+      nameKey: "Сметка за парно (офис)",
       iconPath: "/health-medical-medicine-termometer-svgrepo-com.svg",
       date: "20/01/2026",
-      autoPayment: "Не",
+      autoPaymentKey: "Не",
       amount: "22 500.00",
       currency: "BGN",
       infoIconPath: "/info-svgrepo-com.svg",
@@ -294,10 +304,10 @@ export default function Home() {
     },
     {
       id: "p3",
-      name: "Vivacom (Личен GSM)",
+      nameKey: "Vivacom (Личен GSM)",
       iconPath: "/mobile-phone-svgrepo-com.svg",
       date: "18/09/2025",
-      autoPayment: "Да",
+      autoPaymentKey: "Да",
       amount: "70.00",
       currency: "BGN",
       infoIconPath: "/info-svgrepo-com.svg",
@@ -305,10 +315,10 @@ export default function Home() {
     },
     {
       id: "p4",
-      name: "Такса смет",
+      nameKey: "Такса смет",
       iconPath: "/credit-card-pay-svgrepo-com.svg",
       date: "31/12/2025",
-      autoPayment: "N/a",
+      autoPaymentKey: "N/a",
       amount: "36.45",
       currency: "BGN",
       infoIconPath: "/info-svgrepo-com.svg",
@@ -322,7 +332,7 @@ export default function Home() {
       id: "lt1",
       typeIconPath: "/GreenArrow.png",
       date: "18/05/2025",
-      documentName: "Получен превод в лева",
+      documentNameKey: "Получен превод в лева",
       documentRef: "HDOPIUB150752806",
       recipientPayer: "Йордан Йорданов Геновски",
       account: "BG57FINV915010BGN0WQDF",
@@ -334,7 +344,7 @@ export default function Home() {
       id: "lt2",
       typeIconPath: "/GreenArrow.png",
       date: "17/05/2025",
-      documentName: "Получен превод във валута",
+      documentNameKey: "Получен превод във валута",
       documentRef: "HDOPIUB143286034",
       recipientPayer: "UAB PARVUS FINANCE GROUP",
       account: "LT527300010136139978",
@@ -346,7 +356,7 @@ export default function Home() {
       id: "lt3",
       typeIconPath: "/RedArrow.png",
       date: "15/05/2025",
-      documentName: "Кредитен превод",
+      documentNameKey: "Кредитен превод",
       documentRef: "S24PWUB143250023",
       recipientPayer: "Филип Илиев Филипов",
       account: "BG14FINV915010BGN0VWVT",
@@ -358,7 +368,7 @@ export default function Home() {
       id: "lt4",
       typeIconPath: "/GreenArrow.png",
       date: "13/05/2025",
-      documentName: "Получен превод в лева",
+      documentNameKey: "Получен превод в лева",
       documentRef: "HDOPIUB142458275",
       recipientPayer: "WHIZ EOOD",
       account: "BG57FINV915010BGN0WQDF",
@@ -370,7 +380,7 @@ export default function Home() {
       id: "lt5",
       typeIconPath: "/RedArrow.png",
       date: "12/05/2025",
-      documentName: "Вътрешнобанков превод",
+      documentNameKey: "Вътрешнобанков превод",
       documentRef: "S18FTRQ143300001",
       recipientPayer: "Филип Илиев Филипов",
       account: "BG44FINV91501004592444",
@@ -384,7 +394,7 @@ export default function Home() {
   const creditsData: CreditData[] = [
     {
       id: "1",
-      type: "Потребителски кредит",
+      typeKey: "Потребителски кредит",
       size: "10 000.00",
       currency: "BGN",
       interestRate: "7.70%",
@@ -397,7 +407,7 @@ export default function Home() {
     },
     {
       id: "2",
-      type: 'Жилищен кредит "Право на избор"',
+      typeKey: 'Жилищен кредит "Право на избор"',
       size: "300 000.00",
       currency: "EUR",
       interestRate: "5.80%",
@@ -410,7 +420,7 @@ export default function Home() {
     },
     {
       id: "3",
-      type: "Супер кредит",
+      typeKey: "Супер кредит",
       size: "150 000.00",
       currency: "USD",
       interestRate: "6.50%",
@@ -428,7 +438,7 @@ export default function Home() {
     {
       id: "dep1",
       depositIconPath: "/deposit-svgrepo-com.svg",
-      name: "Свободен депозит - 12 м.",
+      nameKey: "Свободен депозит - 12 м.",
       accountNumber: "91502016356335",
       currency: "USD",
       availability: "30 000 000.00", // As per OCR
@@ -443,7 +453,7 @@ export default function Home() {
     {
       id: "dep2",
       depositIconPath: "/deposit-svgrepo-com.svg",
-      name: "Ср. депозит - физ. лица - 6 м.",
+      nameKey: "Ср. депозит - физ. лица - 6 м.",
       accountNumber: "915010BGNOUCTZ",
       currency: "BGN",
       availability: "100 000.00",
@@ -459,7 +469,7 @@ export default function Home() {
     {
       id: "dep3",
       depositIconPath: "/deposit-svgrepo-com.svg",
-      name: 'Депозит "6 x 6"',
+      nameKey: 'Депозит "6 x 6"',
       accountNumber: "91501004592050",
       currency: "EUR",
       availability: "50 000.00",
@@ -486,26 +496,29 @@ export default function Home() {
           {/* Your main page content goes here */}
           <section id="начало" className="mb-8">
             <h1 className="text-2xl font-semibold text-gray-700 mb-4">
-              Начало
+              {t("dashboardPage.homeTitle")}
             </h1>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <InfoCard
-                title="Нетна разполагаема наличност по сметки и депозити:"
+                title={t("dashboardPage.netAvailableBalance")}
                 amount="50 203 000.03"
               />
               <InfoCard
-                title="Общо текущо салдо по сметки и депозити:"
+                title={t("dashboardPage.totalCurrentBalance")}
                 amount="75 000.00"
               />
               <InfoCard
-                title="Обща нетна разполагаемост по картови сметки:"
+                title={t("dashboardPage.totalNetCardAvailability")}
                 amount="20 000.00"
               />
             </div>
           </section>
           {/* Further sections will be added here */}
           {/* Accounts Table Section */}
-          <DashboardSection title="Сметки" sectionId="сметки">
+          <DashboardSection
+            title={t("dashboardPage.accounts", "Сметки")}
+            sectionId="сметки"
+          >
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -513,43 +526,43 @@ export default function Home() {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Сметка
+                    {t("dashboardPage.tableHeaderAccount")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Валута
+                    {t("dashboardPage.tableHeaderCurrency")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Разполагаемост
+                    {t("dashboardPage.tableHeaderAvailability")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Начално салдо за деня
+                    {t("dashboardPage.tableHeaderInitialBalance")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Текущо салдо
+                    {t("dashboardPage.tableHeaderCurrentBalance")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Дължими суми от такси
+                    {t("dashboardPage.tableHeaderDueTaxes")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Действия
+                    {t("dashboardPage.tableHeaderActions")}
                   </th>
                 </tr>
               </thead>
@@ -560,14 +573,14 @@ export default function Home() {
                       <div className="flex items-center">
                         <Image
                           src={account.iconPath}
-                          alt="Account type"
+                          alt={t("dashboardPage.altAccountType")}
                           width={20}
                           height={20}
                           className="mr-3 flex-shrink-0"
                         />
                         <div>
                           <div className="text-sm font-medium text-gray-900">
-                            {account.type}
+                            {t(account.typeKey)}
                           </div>
                           <div className="text-sm text-gray-500">
                             {account.accountNumber}
@@ -592,12 +605,12 @@ export default function Home() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button
-                        title={account.actionTooltip}
+                        title={t(account.actionTooltipKey)}
                         className="p-1 hover:bg-gray-100 rounded"
                       >
                         <Image
                           src={account.actionIconPath}
-                          alt={account.actionTooltip}
+                          alt={t(account.actionTooltipKey)}
                           width={20}
                           height={20}
                         />
@@ -610,7 +623,10 @@ export default function Home() {
           </DashboardSection>
 
           {/* Transactions for Signature Table Section */}
-          <DashboardSection title="ЗА ПОДПИС" sectionId="преводи-за-подпис">
+          <DashboardSection
+            title={t("dashboardPage.forSigning")}
+            sectionId="преводи-за-подпис"
+          >
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -621,31 +637,35 @@ export default function Home() {
                     <input
                       type="checkbox"
                       className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                      aria-label={t("dashboardPage.selectAllForSigning")}
                     />
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Вид плащане ↓
+                    {t("dashboardPage.tableHeaderPaymentType")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Платец
+                    {t("dashboardPage.tableHeaderPayer")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Получател
+                    {t("dashboardPage.tableHeaderReceiver")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Сума и валута
+                    {t(
+                      "dashboardPage.tableHeaderAmountAndCurrency",
+                      "Сума и валута"
+                    )}
                   </th>
                   <th
                     scope="col"
@@ -663,14 +683,17 @@ export default function Home() {
                         defaultChecked={
                           transaction.id === "t1" || transaction.id === "t3"
                         }
+                        aria-label={t("dashboardPage.selectTransaction", {
+                          id: transaction.id,
+                        })}
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {transaction.paymentType}
+                        {transaction.paymentTypeKey}
                       </div>
                       <div className="text-sm text-blue-600 hover:underline cursor-pointer">
-                        {transaction.paymentSubType}
+                        {transaction.paymentSubTypeKey}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -694,34 +717,34 @@ export default function Home() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button
-                        title="Добавяне"
+                        title={t("dashboardPage.tooltipAdd")}
                         className="p-1 hover:bg-gray-100 rounded mr-1"
                       >
                         <Image
                           src={transaction.actions.addIconPath}
-                          alt="Добавяне"
+                          alt={t("dashboardPage.tooltipAdd")}
                           width={20}
                           height={20}
                         />
                       </button>
                       <button
-                        title="Редактиране"
+                        title={t("dashboardPage.tooltipEdit")}
                         className="p-1 hover:bg-gray-100 rounded mr-1"
                       >
                         <Image
                           src={transaction.actions.editIconPath}
-                          alt="Редактиране"
+                          alt={t("dashboardPage.tooltipEdit")}
                           width={20}
                           height={20}
                         />
                       </button>
                       <button
-                        title="Отказване"
+                        title={t("dashboardPage.tooltipCancelAction")}
                         className="p-1 hover:bg-gray-100 rounded"
                       >
                         <Image
                           src={transaction.actions.cancelIconPath}
-                          alt="Отказване"
+                          alt={t("dashboardPage.tooltipCancelAction")}
                           width={20}
                           height={20}
                         />
@@ -742,7 +765,7 @@ export default function Home() {
                           height={16}
                           className="mr-2"
                         />{" "}
-                        ПОДПИШЕТЕ
+                        {t("dashboardPage.buttonSignSelected")}
                       </button>
                       <button className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 flex items-center">
                         <Image
@@ -752,7 +775,7 @@ export default function Home() {
                           height={16}
                           className="mr-2"
                         />{" "}
-                        TOKEN
+                        {t("dashboardPage.buttonToken")}
                       </button>
                       <button className="px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-300 flex items-center">
                         <Image
@@ -762,7 +785,7 @@ export default function Home() {
                           height={16}
                           className="mr-2"
                         />{" "}
-                        ОТКАЖЕТЕ
+                        {t("dashboardPage.buttonCancelSelected")}
                       </button>
                     </div>
                   </td>
@@ -772,7 +795,7 @@ export default function Home() {
           </DashboardSection>
 
           {/* Cards Table Section */}
-          <DashboardSection title="КАРТИ" sectionId="карти">
+          <DashboardSection title={t("dashboardPage.cards")} sectionId="карти">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -790,43 +813,43 @@ export default function Home() {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Карта
+                    {t("dashboardPage.tableHeaderCard")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Валута
+                    {t("dashboardPage.tableHeaderCurrency")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Наличност
+                    {t("dashboardPage.tableHeaderAvailability2")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Задължения
+                    {t("dashboardPage.tableHeaderObligations")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Мин. вноска
+                    {t("dashboardPage.tableHeaderMinContribution")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Погасете до
+                    {t("dashboardPage.tableHeaderDueDate")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    3D Сигурност
+                    {t("dashboardPage.tableHeader3DSecurity")}
                   </th>
                 </tr>
               </thead>
@@ -844,14 +867,14 @@ export default function Home() {
                       <div className="flex items-center">
                         <Image
                           src={card.cardIconPath}
-                          alt={card.cardType}
+                          alt={card.cardTypeKey}
                           width={40}
                           height={25}
                           className="mr-3"
                         />
                         <div>
                           <div className="text-sm font-medium text-gray-900">
-                            {card.cardType}
+                            {card.cardTypeKey}
                           </div>
                           <div className="text-sm text-gray-500">
                             ****{card.cardNumberLast4}
@@ -884,19 +907,19 @@ export default function Home() {
                       <div className="flex items-center">
                         <Image
                           src={card.security3DIconPath}
-                          alt={card.security3DStatus}
+                          alt={card.security3DStatusKey}
                           width={24}
                           height={16}
                           className="mr-2"
                         />
                         <span
                           className={`text-sm ${
-                            card.security3DStatus === "Активна"
+                            card.security3DStatusKey === "Активна"
                               ? "text-green-600"
                               : "text-red-600"
                           }`}
                         >
-                          {card.security3DStatus}
+                          {card.security3DStatusKey}
                         </span>
                       </div>
                     </td>
@@ -907,7 +930,7 @@ export default function Home() {
                 <tr>
                   <td colSpan={8} className="px-6 py-3 text-left">
                     <button className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700">
-                      ПОГАСЕТЕ &gt;
+                      {t("dashboardPage.buttonRepay")} &gt;
                     </button>
                   </td>
                 </tr>
@@ -917,7 +940,7 @@ export default function Home() {
 
           {/* Pending Payments Table Section */}
           <DashboardSection
-            title="ЗАДЪЛЖЕНИЯ ОЧАКВАЩИ ПЛАЩАНЕ"
+            title={t("dashboardPage.pendingPayments")}
             sectionId="задължения-очакващи-плащане"
           >
             <table className="min-w-full divide-y divide-gray-200">
@@ -937,25 +960,25 @@ export default function Home() {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Наименование
+                    {t("dashboardPage.tableHeaderName")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Към дата
+                    {t("dashboardPage.tableHeaderDateDue")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center"
                   >
-                    Автом. плащане
+                    {t("dashboardPage.tableHeaderAutoPayment")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center"
                   >
-                    Сума
+                    {t("dashboardPage.tableHeaderAmount")}
                   </th>
                   <th
                     scope="col"
@@ -986,7 +1009,7 @@ export default function Home() {
                           className="mr-3 flex-shrink-0 h-8 w-8 rounded-full bg-gray-200 p-1" // Adjusted Tailwind classes
                         />
                         <div className="text-sm font-medium text-gray-900">
-                          {payment.name}
+                          {payment.nameKey}
                         </div>
                       </div>
                     </td>
@@ -994,7 +1017,7 @@ export default function Home() {
                       {payment.date}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                      {payment.autoPayment}
+                      {payment.autoPaymentKey}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 text-right">
                       {payment.amount} {payment.currency}
@@ -1019,7 +1042,7 @@ export default function Home() {
                 <tr>
                   <td colSpan={6} className="px-6 py-4 text-left">
                     <button className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700">
-                      ПЛАТЕТЕ &gt;
+                      {t("dashboardPage.buttonPay")} &gt;
                     </button>
                   </td>
                 </tr>
@@ -1029,7 +1052,7 @@ export default function Home() {
 
           {/* Last 5 Transfers Table Section */}
           <DashboardSection
-            title="ПОСЛЕДНИ 5 ПРЕВОДА"
+            title={t("dashboardPage.last5Transfers")}
             sectionId="последни-5-превода"
           >
             <table className="min-w-full divide-y divide-gray-200">
@@ -1039,37 +1062,37 @@ export default function Home() {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Тип
+                    {t("dashboardPage.tableHeaderType")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Дата
+                    {t("dashboardPage.tableHeaderDate")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Документ и референция
+                    {t("dashboardPage.tableHeaderDocumentAndRef")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Получател/наредител
+                    {t("dashboardPage.tableHeaderRecipientPayer")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Сметка
+                    {t("dashboardPage.tableHeaderAccount")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Сума и валута
+                    {t("dashboardPage.tableHeaderAmountAndCurrency")}
                   </th>
                 </tr>
               </thead>
@@ -1089,7 +1112,7 @@ export default function Home() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <a href="#" className="text-blue-600 hover:underline">
-                        {transaction.documentName}
+                        {transaction.documentNameKey}
                       </a>
                       <div className="text-xs text-gray-500">
                         {transaction.documentRef}
@@ -1120,7 +1143,10 @@ export default function Home() {
           </DashboardSection>
 
           {/* Credits Table Section */}
-          <DashboardSection title="КРЕДИТИ" sectionId="кредити">
+          <DashboardSection
+            title={t("dashboardPage.credits")}
+            sectionId="кредити"
+          >
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -1137,37 +1163,37 @@ export default function Home() {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Вид кредит
+                    {t("dashboardPage.tableHeaderCreditType")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Валута
+                    {t("dashboardPage.tableHeaderCurrency")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Лихвен %
+                    {t("dashboardPage.tableHeaderInterestRate")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Дължима вноска
+                    {t("dashboardPage.tableHeaderDueInstallment")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Дата за вноска
+                    {t("dashboardPage.tableHeaderInstallmentDate")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Падеж
+                    {t("dashboardPage.tableHeaderMaturity")}
                   </th>
                 </tr>
               </thead>
@@ -1191,7 +1217,7 @@ export default function Home() {
                         />
                         <div>
                           <div className="text-sm font-medium text-gray-900">
-                            {credit.type}
+                            {credit.typeKey}
                           </div>
                           <div className="text-sm text-gray-500">
                             Размер: {credit.size}
@@ -1229,7 +1255,7 @@ export default function Home() {
                     className="px-6 py-4 whitespace-nowrap text-left"
                   >
                     <button className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded">
-                      ПЛАТЕТЕ &gt;
+                      {t("dashboardPage.buttonPay")} &gt;
                     </button>
                   </td>
                 </tr>
@@ -1238,7 +1264,10 @@ export default function Home() {
           </DashboardSection>
 
           {/* Deposits Section */}
-          <DashboardSection title="ДЕПОЗИТИ" sectionId="deposits">
+          <DashboardSection
+            title={t("dashboardPage.deposits")}
+            sectionId="deposits"
+          >
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left text-gray-500 divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -1247,37 +1276,37 @@ export default function Home() {
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Депозит
+                      {t("dashboardPage.tableHeaderDeposit")}
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Валута
+                      {t("dashboardPage.tableHeaderCurrency")}
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Разполагаемост
+                      {t("dashboardPage.tableHeaderAvailability")}
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Натрупана лихва
+                      {t("dashboardPage.tableHeaderAccruedInterest")}
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Падеж
+                      {t("dashboardPage.tableHeaderMaturity")}
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Действия
+                      {t("dashboardPage.tableHeaderActions")}
                     </th>
                   </tr>
                 </thead>
@@ -1295,7 +1324,7 @@ export default function Home() {
                           />
                           <div>
                             <div className="font-medium text-gray-900">
-                              {deposit.name}
+                              {deposit.nameKey}
                             </div>
                             <div className="text-xs text-blue-600 hover:underline cursor-pointer">
                               {deposit.accountNumber} &gt;

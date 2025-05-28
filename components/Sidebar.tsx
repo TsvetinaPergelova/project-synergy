@@ -3,8 +3,11 @@ import Link from "next/link";
 import Image from "next/image"; // Import the Image component
 import { useEffect, useState } from "react"; // Import useState and useEffect
 import FlyoutMenu, { MenuItem } from "./FlyoutMenu"; // Import the new FlyoutMenu component
+import "../locales/i18n"; // Ensure i18n is initialized
+import { useTranslation } from "react-i18next"; // Import useTranslation for translations
 
 export default function Sidebar() {
+  const { t, i18n } = useTranslation(); // Initialize translation hook
   const [currentDate, setCurrentDate] = useState("");
   const [isFibankInfoOpen, setIsFibankInfoOpen] = useState(false); // New state for this dropdown
   const [isDopulnitelnoOpen, setIsDopulnitelnoOpen] = useState(false); // New state for Допълнително
@@ -13,141 +16,195 @@ export default function Sidebar() {
     const date = new Date();
     const day = date.getDate();
     const monthNames = [
-      "Яну",
-      "Фев",
-      "Мар",
-      "Апр",
-      "Май",
-      "Юни",
-      "Юли",
-      "Авг",
-      "Сеп",
-      "Окт",
-      "Ное",
-      "Дек",
+      t("sidebar.months.jan", "Януари"),
+      t("sidebar.months.feb", "Февруари"),
+      t("sidebar.months.mar", "Март"),
+      t("sidebar.months.apr", "Април"),
+      t("sidebar.months.may", "Май"),
+      t("sidebar.months.jun", "Юни"),
+      t("sidebar.months.jul", "Юли"),
+      t("sidebar.months.aug", "Август"),
+      t("sidebar.months.sep", "Септември"),
+      t("sidebar.months.oct", "Октомври"),
+      t("sidebar.months.nov", "Ноември"),
+      t("sidebar.months.dec", "Декември"),
     ];
     const month = monthNames[date.getMonth()];
     const year = date.getFullYear();
     setCurrentDate(`${day}/${month}/${year}`);
-  }, []);
+  }, [i18n.language, t]);
 
   const spravkiMenuItems: MenuItem[] = [
     {
       type: "item",
-      label: "ПОС транзакции - по групи",
+      label: t(
+        "sidebar.flyout.reports.posTransactionsGroups",
+        "ПОС транзакции - по групи"
+      ),
       onClick: () => console.log("Clicked: ПОС транзакции - по групи"),
     },
     {
       type: "item",
-      label: "ПОС транзакции за период",
+      label: t(
+        "sidebar.flyout.reports.posTransactionsPeriod",
+        "ПОС транзакции за период"
+      ),
       onClick: () => console.log("Clicked: ПОС транзакции за период"),
     },
     {
       type: "item",
-      label: "Салда по всички сметки SSO",
+      label: t(
+        "sidebar.flyout.reports.ssoBalances",
+        "Салда по всички сметки SSO"
+      ),
       onClick: () => console.log("Clicked: Салда по всички сметки SSO"),
     },
     {
       type: "item",
-      label: "Дневен отчет за бюдж. разпоредител",
+      label: t(
+        "sidebar.flyout.reports.dailyBudgetReport",
+        "Дневен отчет за бюдж. разпоредител"
+      ),
       onClick: () => console.log("Clicked: Дневен отчет за бюдж. разпоредител"),
     },
     {
       type: "item",
-      label: "Извършени услуги за клиент",
+      label: t(
+        "sidebar.flyout.reports.clientServicesPerformed",
+        "Извършени услуги за клиент"
+      ),
       onClick: () => console.log("Clicked: Извършени услуги за клиент"),
     },
     {
       type: "item",
-      label: "Изпратени SMS нотификации",
+      label: t(
+        "sidebar.flyout.reports.sentSmsNotifications",
+        "Изпратени SMS нотификации"
+      ),
       onClick: () => console.log("Clicked: Изпратени SMS нотификации"),
     },
     {
       type: "item",
-      label: "Дължими суми от такси",
+      label: t("sidebar.flyout.reports.dueFees", "Дължими суми от такси"),
       onClick: () => console.log("Clicked: Дължими суми от такси"),
     },
     {
       type: "item",
-      label: "Преводи по SWIFT",
+      label: t("sidebar.flyout.reports.swiftTransfers", "Преводи по SWIFT"),
       onClick: () => console.log("Clicked: Преводи по SWIFT"),
     },
     {
       type: "item",
-      label: "Сесии",
+      label: t("sidebar.flyout.reports.sessions", "Сесии"),
       onClick: () => console.log("Clicked: Сесии"),
     },
   ];
 
   const paymentsMenuItems: MenuItem[] = [
-    { type: "header", label: "ПРЕВОДИ" },
+    {
+      type: "header",
+      label: t("sidebar.flyout.payments.headerTransfers", "ПРЕВОДИ"),
+    },
     {
       type: "item",
-      label: "Нов кредитен превод",
+      label: t(
+        "sidebar.flyout.payments.newCreditTransfer",
+        "Нов кредитен превод"
+      ),
       onClick: () => console.log("Clicked: Нов кредитен превод"),
     },
     {
       type: "item",
-      label: "Плащане от/към бюджета",
+      label: t(
+        "sidebar.flyout.payments.budgetPayment",
+        "Плащане от/към бюджета"
+      ),
       onClick: () => console.log("Clicked: Плащане от/към бюджета"),
     },
     {
       type: "item",
-      label: "Директен дебит",
+      label: t("sidebar.flyout.payments.directDebit", "Директен дебит"),
       onClick: () => console.log("Clicked: Директен дебит"),
     },
     {
       type: "item",
-      label: "Масов превод",
+      label: t("sidebar.flyout.payments.massTransfer", "Масов превод"),
       onClick: () => console.log("Clicked: Масов превод"),
     },
     {
       type: "item",
-      label: "Преводи от файл",
+      label: t("sidebar.flyout.payments.fileTransfers", "Преводи от файл"),
       onClick: () => console.log("Clicked: Преводи от файл"),
     },
     {
       type: "item",
-      label: "Нов периодичен превод",
+      label: t(
+        "sidebar.flyout.payments.newPeriodicTransfer",
+        "Нов периодичен превод"
+      ),
       onClick: () => console.log("Clicked: Нов периодичен превод"),
     },
     {
       type: "item",
-      label: "Плащания към СЕБРА",
+      label: t("sidebar.flyout.payments.sebraPayments", "Плащания към СЕБРА"),
       onClick: () => console.log("Clicked: Плащания към СЕБРА"),
     },
     {
       type: "item",
-      label: "Кредитен превод СУ",
+      label: t(
+        "sidebar.flyout.payments.suCreditTransfer",
+        "Кредитен превод СУ"
+      ),
       onClick: () => console.log("Clicked: Кредитен превод СУ"),
     },
     {
       type: "item",
-      label: "Вътрешноклонов превод СУ",
+      label: t(
+        "sidebar.flyout.payments.suInternalTransfer",
+        "Вътрешноклонов превод СУ"
+      ),
       onClick: () => console.log("Clicked: Вътрешноклонов превод СУ"),
     },
     { type: "separator" },
-    { type: "header", label: "ПОКУПКА/ПРОДАЖБА НА ВАЛУТА" },
+    {
+      type: "header",
+      label: t(
+        "sidebar.flyout.payments.headerCurrencyExchange",
+        "ПОКУПКА/ПРОДАЖБА НА ВАЛУТА"
+      ),
+    },
     {
       type: "item",
-      label: "Покупка/продажба на валута",
+      label: t(
+        "sidebar.flyout.payments.currencyBuySell",
+        "Покупка/продажба на валута"
+      ),
       onClick: () => console.log("Clicked: Покупка/продажба на валута"),
     },
     {
       type: "item",
-      label: "Договаряне на курс",
+      label: t("sidebar.flyout.payments.negotiateRate", "Договаряне на курс"),
       onClick: () => console.log("Clicked: Договаряне на курс"),
     },
     { type: "separator" },
-    { type: "header", label: "РЕГИСТРИ" },
+    {
+      type: "header",
+      label: t("sidebar.flyout.payments.headerRegisters", "РЕГИСТРИ"),
+    },
     {
       type: "item",
-      label: "Регистър на пер. преводи",
+      label: t(
+        "sidebar.flyout.payments.periodicTransfersRegister",
+        "Регистър на пер. преводи"
+      ),
       onClick: () => console.log("Clicked: Регистър на пер. преводи"),
     },
     {
       type: "item",
-      label: "Получатели за преводи",
+      label: t(
+        "sidebar.flyout.payments.transferRecipients",
+        "Получатели за преводи"
+      ),
       onClick: () => console.log("Clicked: Получатели за преводи"),
     },
   ];
@@ -155,12 +212,18 @@ export default function Sidebar() {
   const statementsMenuItems: MenuItem[] = [
     {
       type: "item",
-      label: "Извлечение по сметка",
+      label: t(
+        "sidebar.flyout.statements.accountStatement",
+        "Извлечение по сметка"
+      ),
       onClick: () => console.log("Clicked: Извлечение по сметка"),
     },
     {
       type: "item",
-      label: "Извлечение по кредитна карта",
+      label: t(
+        "sidebar.flyout.statements.creditCardStatement",
+        "Извлечение по кредитна карта"
+      ),
       onClick: () => console.log("Clicked: Извлечение по кредитна карта"),
     },
   ];
@@ -168,72 +231,117 @@ export default function Sidebar() {
   const servicesMenuItems: MenuItem[] = [
     {
       type: "item",
-      label: "Отчети по e-mail за сметки",
+      label: t(
+        "sidebar.flyout.services.emailAccountReports",
+        "Отчети по e-mail за сметки"
+      ),
       onClick: () => console.log("Clicked: Отчети по e-mail за сметки"),
     },
     {
       type: "item",
-      label: "Извлечения по e-mail за карти",
+      label: t(
+        "sidebar.flyout.services.emailCardStatements",
+        "Извлечения по e-mail за карти"
+      ),
       onClick: () => console.log("Clicked: Извлечения по e-mail за карти"),
     },
     {
       type: "item",
-      label: "Картови авторизации по e-mail",
+      label: t(
+        "sidebar.flyout.services.emailCardAuthorizations",
+        "Картови авторизации по e-mail"
+      ),
       onClick: () => console.log("Clicked: Картови авторизации по e-mail"),
     },
     {
       type: "item",
-      label: "Преводи по SWIFT по e-mail",
+      label: t(
+        "sidebar.flyout.services.emailSwiftTransfers",
+        "Преводи по SWIFT по e-mail"
+      ),
       onClick: () => console.log("Clicked: Преводи по SWIFT по e-mail"),
     },
   ];
 
   const utilitiesMenuItems: MenuItem[] = [
-    { type: "header", label: "ПЛАЩАНЕ НА ЗАДЪЛЖЕНИЯ" },
+    {
+      type: "header",
+      label: t(
+        "sidebar.flyout.utilities.headerDebtPayments",
+        "ПЛАЩАНЕ НА ЗАДЪЛЖЕНИЯ"
+      ),
+    },
     {
       type: "item",
-      label: "Задължения очакващи плащане",
+      label: t(
+        "sidebar.flyout.utilities.pendingDebts",
+        "Задължения очакващи плащане"
+      ),
       onClick: () => {
         window.location.hash = "задължения-очакващи-плащане";
       },
     },
     {
       type: "item",
-      label: "Плащане на задължения",
+      label: t("sidebar.flyout.utilities.payDebts", "Плащане на задължения"),
       onClick: () => console.log("Clicked: Плащане на задължения"),
     },
     {
       type: "item",
-      label: "Плащане на общински данъци и такси",
+      label: t(
+        "sidebar.flyout.utilities.payMunicipalTaxes",
+        "Плащане на общински данъци и такси"
+      ),
       onClick: () => console.log("Clicked: Плащане на общински данъци и такси"),
     },
     {
       type: "item",
-      label: "Еднократно плащане",
+      label: t("sidebar.flyout.utilities.oneTimePayment", "Еднократно плащане"),
       onClick: () => console.log("Clicked: Еднократно плащане"),
     },
     { type: "separator" },
-    { type: "header", label: "АБОНАТНИ СМЕТКИ" },
+    {
+      type: "header",
+      label: t(
+        "sidebar.flyout.utilities.headerSubscriptionAccounts",
+        "АБОНАТНИ СМЕТКИ"
+      ),
+    },
     {
       type: "item",
-      label: "Добавяне на абонатна сметка",
+      label: t(
+        "sidebar.flyout.utilities.addSubscriptionAccount",
+        "Добавяне на абонатна сметка"
+      ),
       onClick: () => console.log("Clicked: Добавяне на абонатна сметка"),
     },
     {
       type: "item",
-      label: "Регистрирани абонатни сметки",
+      label: t(
+        "sidebar.flyout.utilities.registeredSubscriptionAccounts",
+        "Регистрирани абонатни сметки"
+      ),
       onClick: () => console.log("Clicked: Регистрирани абонатни сметки"),
     },
     { type: "separator" },
-    { type: "header", label: "ДРУГИ" },
+    {
+      type: "header",
+      label: t("sidebar.flyout.utilities.headerOther", "ДРУГИ"),
+    },
     {
       type: "item",
-      label: "Известия по e-mail",
+      label: t(
+        "sidebar.flyout.utilities.emailNotifications",
+        "Известия по e-mail"
+      ),
       onClick: () => console.log("Clicked: Известия по e-mail"),
     },
     {
       type: "item",
-      label: "История на плащанията",
+      label: t(
+        "sidebar.flyout.utilities.paymentHistory",
+        "История на плащанията"
+      ),
       onClick: () => console.log("Clicked: История на плащанията"),
     },
   ];
@@ -241,39 +349,97 @@ export default function Sidebar() {
   const declarationsMenuItems: MenuItem[] = [
     {
       type: "item",
-      label: "Декларация НОИ",
+      label: t("sidebar.flyout.declarations.noiDeclaration", "Декларация НОИ"),
       onClick: () => console.log("Clicked: Декларация НОИ"),
     },
     {
       type: "item",
-      label: "Статистическа форма 100 000 лв.",
+      label: t(
+        "sidebar.flyout.declarations.statForm100k",
+        "Статистическа форма 100 000 лв."
+      ),
       onClick: () => console.log("Clicked: Статистическа форма 100 000 лв."),
     },
     {
       type: "item",
-      label: "Декларация за произход на средствата",
+      label: t(
+        "sidebar.flyout.declarations.originOfFunds",
+        "Декларация за произход на средствата"
+      ),
       onClick: () =>
         console.log("Clicked: Декларация за произход на средствата"),
     },
     {
       type: "item",
-      label: "Декларация за презгранични преводи",
+      label: t(
+        "sidebar.flyout.declarations.crossBorderTransfers",
+        "Декларация за презгранични преводи"
+      ),
       onClick: () => console.log("Clicked: Декларация за презгранични преводи"),
     },
   ];
 
   const fibankInfoItems = [
-    { label: "Клонове", href: "/dashboard/branches" },
-    { label: "Банкомати", href: "/dashboard/atms" },
-    { label: "Валутни курсове", href: "/dashboard/currency" },
-    { label: "Новини", href: "/dashboard/news" },
-    { label: "Промоции", href: "/dashboard/promotions" },
+    {
+      labelKey: "sidebar.fibankInfo.branches",
+      defaultText: "Клонове",
+      href: "/dashboard/branches",
+      icon: "/bank-svgrepo-com.svg",
+      altKey: "sidebar.fibankInfo.branchesIconAlt",
+    },
+    {
+      labelKey: "sidebar.fibankInfo.atms",
+      defaultText: "Банкомати",
+      href: "/dashboard/atms",
+      icon: "/cash-money-by-bank-machine-svgrepo-com.svg",
+      altKey: "sidebar.fibankInfo.atmsIconAlt",
+    },
+    {
+      labelKey: "sidebar.fibankInfo.currencyRates",
+      defaultText: "Валутни курсове",
+      href: "/dashboard/currency",
+      icon: "/dollar-and-euro-exchange-svgrepo-com.svg",
+      altKey: "sidebar.fibankInfo.currencyRatesIconAlt",
+    },
+    {
+      labelKey: "sidebar.fibankInfo.news",
+      defaultText: "Новини",
+      href: "/dashboard/news",
+      icon: "/news-publishing-svgrepo-com.svg",
+      altKey: "sidebar.fibankInfo.newsIconAlt",
+    },
+    {
+      labelKey: "sidebar.fibankInfo.promotions",
+      defaultText: "Промоции",
+      href: "/dashboard/promotions",
+      icon: "/promotions-promotion-svgrepo-com.svg",
+      altKey: "sidebar.fibankInfo.promotionsIconAlt",
+    },
   ];
 
   const dopulnitelnoItems = [
-    { label: "Помощ", href: "/dashboard/help" },
-    { label: "Към сайта", href: "https://www.fibank.bg", target: "_blank" },
-    { label: "Мобилно приложение", href: "/dashboard/mobile-app" },
+    {
+      labelKey: "sidebar.additional.help",
+      defaultText: "Помощ",
+      href: "/dashboard/help",
+      icon: "/information-4-svgrepo-com.svg",
+      altKey: "sidebar.additional.helpIconAlt",
+    },
+    {
+      labelKey: "sidebar.additional.toSite",
+      defaultText: "Към сайта",
+      href: "https://www.fibank.bg",
+      target: "_blank",
+      icon: "/computer-svgrepo-com.svg",
+      altKey: "sidebar.additional.toSiteIconAlt",
+    },
+    {
+      labelKey: "sidebar.additional.mobileApp",
+      defaultText: "Мобилно приложение",
+      href: "/dashboard/mobile-app",
+      icon: "/mobile-app-developing-svgrepo-com.svg",
+      altKey: "sidebar.additional.mobileAppIconAlt",
+    },
   ];
 
   return (
@@ -281,34 +447,38 @@ export default function Sidebar() {
       {/* User Info and New Transfer Button */}
       <div className="p-4 border-b border-gray-200">
         <div className="text-sm text-gray-400 mb-2">
-          Счетоводна дата: {currentDate}
+          {t("sidebar.accountingDate", "Счетоводна дата")}: {currentDate}
         </div>
         <div className="flex items-center gap-3">
           <Image
             src="/user-avatar.png"
-            alt="User Avatar"
+            alt={t("sidebar.userAvatarAlt", "User Avatar")}
             width={40}
             height={40}
             className="rounded-full"
           />
           <div>
-            <div className="text-xs text-gray-400">Потребител:</div>
+            <div className="text-xs text-gray-400">
+              {t("common.user", "Потребител")}:
+            </div>
             <div className="font-semibold text-sm">Филип Филипов</div>
           </div>
         </div>
         <div className="ml-[calc(40px+0.75rem)] mt-1">
-          <div className="text-xs text-gray-400">Клиент:</div>
+          <div className="text-xs text-gray-400">
+            {t("sidebar.client", "Клиент")}:
+          </div>
           <div className="font-semibold text-sm">УИЗ ЕООД</div>
         </div>
         <button className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded flex items-center justify-center gap-2 mt-4">
           <Image
             src="/CoinIcon.png"
-            alt="New Transfer Icon"
+            alt={t("sidebar.newTransferIconAlt", "New Transfer Icon")}
             width={20}
             height={20}
             className="mr-4"
           />
-          НОВ ПРЕВОД
+          {t("sidebar.newTransferButton", "НОВ ПРЕВОД")}
         </button>
       </div>
       <nav className="flex-1 flex flex-col gap-2 p-4">
@@ -318,30 +488,31 @@ export default function Sidebar() {
         >
           <Image
             src="/home-svgrepo-com.svg"
-            alt="Home Icon"
+            alt={t("sidebar.homeIconAlt", "Home Icon")}
             width={20}
             height={20}
           />
-          Начало
+          {t("sidebar.nav.home", "Начало")}
         </a>
 
         {/* Справки Section with Flyout Menu */}
         <FlyoutMenu
-          buttonLabel="Справки"
+          buttonLabel={t("sidebar.flyout.reports.title", "Справки")}
           buttonIconSrc="/document-svgrepo-com.svg"
           menuItems={spravkiMenuItems}
+          // buttonIconAlt={t("sidebar.flyout.reports.iconAlt", "Reports Icon")}
         />
 
         <div className="flex flex-col gap-1 pt-2">
           {/* Payments Section with Flyout Menu */}
           <FlyoutMenu
-            buttonLabel="Плащания"
+            buttonLabel={t("sidebar.flyout.payments.title", "Плащания")}
             buttonIconSrc="/payments.svg"
             menuItems={paymentsMenuItems}
           />
           {/* Statements Section with Flyout Menu */}
           <FlyoutMenu
-            buttonLabel="Извлечения"
+            buttonLabel={t("sidebar.flyout.statements.title", "Извлечения")}
             buttonIconSrc="/statements.svg"
             menuItems={statementsMenuItems}
           />
@@ -351,11 +522,11 @@ export default function Sidebar() {
           >
             <Image
               src="/bill-svgrepo-com.svg"
-              alt="Сметки Icon"
+              alt={t("sidebar.nav.accountsIconAlt", "Accounts Icon")}
               width={20}
               height={20}
             />
-            Сметки
+            {t("sidebar.nav.accounts", "Сметки")}
           </a>
           <Link
             href="/dashboard/deposits"
@@ -363,11 +534,11 @@ export default function Sidebar() {
           >
             <Image
               src="/deposit-svgrepo-com.svg"
-              alt="Сметки Icon"
+              alt={t("sidebar.nav.depositsIconAlt", "Сметки Icon")}
               width={20}
               height={20}
             />
-            Депозити
+            {t("sidebar.nav.deposits", "Депозити")}
           </Link>
           <a // Changed from Link to a
             href="#карти" // Changed to anchor link
@@ -375,11 +546,11 @@ export default function Sidebar() {
           >
             <Image
               src="/credit-card-svgrepo-com.svg"
-              alt="Карти Icon" // Changed alt text
+              alt={t("sidebar.nav.cardsIconAlt", "Cards Icon")} // Changed alt text
               width={20}
               height={20}
             />
-            Карти
+            {t("sidebar.nav.cards", "Карти")}
           </a>
           <a // Changed from Link to a
             href="#преводи-за-подпис" // Changed to anchor link
@@ -387,11 +558,14 @@ export default function Sidebar() {
           >
             <Image
               src="/pen-svgrepo-com.svg"
-              alt="Сметки Icon"
+              alt={t(
+                "sidebar.nav.transfersForSigningIconAlt",
+                "Transfers for Signing Icon"
+              )}
               width={20}
               height={20}
             />
-            Преводи за подпис
+            {t("sidebar.nav.transfersForSigning", "Преводи за подпис")}
             <span className="ml-auto bg-red-600 text-white text-xs rounded-full px-2 py-0.5">
               3
             </span>
@@ -402,28 +576,40 @@ export default function Sidebar() {
           >
             <Image
               src="/documents-electronics-svgrepo-com.svg"
-              alt="Сметки Icon"
+              alt={t(
+                "sidebar.nav.orderedDocumentsIconAlt",
+                "Order Documents Icon"
+              )}
               width={20}
               height={20}
             />
-            Наредени <br />
-            документи
+            <span
+              dangerouslySetInnerHTML={{
+                __html: t(
+                  "sidebar.nav.orderedDocuments",
+                  "Наредени <br />документи"
+                ),
+              }}
+            />
           </Link>
           {/* Services Section with Flyout Menu */}
           <FlyoutMenu
-            buttonLabel="Услуги"
+            buttonLabel={t("sidebar.flyout.services.title", "Услуги")}
             buttonIconSrc="/services-svgrepo-com.svg"
             menuItems={servicesMenuItems}
           />
           {/* Utilities Section with Flyout Menu */}
           <FlyoutMenu
-            buttonLabel="Комунални услуги"
+            buttonLabel={t(
+              "sidebar.flyout.utilities.title",
+              "Комунални услуги"
+            )}
             buttonIconSrc="/wallet-send-svgrepo-com.svg"
             menuItems={utilitiesMenuItems}
           />
           {/* Declarations Section with Flyout Menu */}
           <FlyoutMenu
-            buttonLabel="Декларации"
+            buttonLabel={t("sidebar.flyout.declarations.title", "Декларации")}
             buttonIconSrc="/document-with-paper-clip-svgrepo-com.svg"
             menuItems={declarationsMenuItems}
           />
@@ -436,11 +622,11 @@ export default function Sidebar() {
             className="flex items-center justify-between w-full px-4 py-2 rounded hover:bg-gray-100 text-gray-700 font-medium"
           >
             <span className="text-xs text-gray-500 font-semibold">
-              ИНФОРМАЦИЯ ЗА FIBANK
+              {t("sidebar.fibankInfo.title", "ИНФОРМАЦИЯ ЗА FIBANK")}
             </span>
             <Image
               src="/arrow-down-3101.png"
-              alt="Toggle Fibank Info"
+              alt={t("sidebar.fibankInfo.toggleAlt", "Toggle Fibank Info")}
               width={16}
               height={16}
               className={`transform transition-transform duration-200 ${
@@ -452,51 +638,19 @@ export default function Sidebar() {
             <div className="pl-4 pt-1 pb-2 flex flex-col gap-1">
               {fibankInfoItems.map((item) => (
                 <Link
-                  key={item.label}
+                  key={item.labelKey}
                   href={item.href}
                   className="flex items-center gap-3 px-4 py-1.5 rounded hover:bg-gray-100 text-gray-700 text-sm"
                 >
-                  {item.label === "Клонове" && (
+                  {item.icon && (
                     <Image
-                      src="/bank-svgrepo-com.svg"
-                      alt="Клонове Icon"
+                      src={item.icon}
+                      alt={t(item.altKey, "")}
                       width={16}
                       height={16}
                     />
                   )}
-                  {item.label === "Банкомати" && (
-                    <Image
-                      src="/cash-money-by-bank-machine-svgrepo-com.svg"
-                      alt="Банкомати Icon"
-                      width={16}
-                      height={16}
-                    />
-                  )}
-                  {item.label === "Валутни курсове" && (
-                    <Image
-                      src="/dollar-and-euro-exchange-svgrepo-com.svg"
-                      alt="Валутни курсове Icon"
-                      width={16}
-                      height={16}
-                    />
-                  )}
-                  {item.label === "Новини" && (
-                    <Image
-                      src="/news-publishing-svgrepo-com.svg"
-                      alt="Новини Icon"
-                      width={16}
-                      height={16}
-                    />
-                  )}
-                  {item.label === "Промоции" && (
-                    <Image
-                      src="/promotions-promotion-svgrepo-com.svg"
-                      alt="Промоции Icon"
-                      width={16}
-                      height={16}
-                    />
-                  )}
-                  {item.label}
+                  {t(item.labelKey, item.defaultText)}
                 </Link>
               ))}
             </div>
@@ -510,11 +664,11 @@ export default function Sidebar() {
             className="flex items-center justify-between w-full px-4 py-2 rounded hover:bg-gray-100 text-gray-700 font-medium"
           >
             <span className="text-xs text-gray-500 font-semibold">
-              ДОПЪЛНИТЕЛНО
+              {t("sidebar.additional.title", "ДОПЪЛНИТЕЛНО")}
             </span>
             <Image
               src="/arrow-down-3101.png"
-              alt="Toggle Допълнително"
+              alt={t("sidebar.additional.toggleAlt", "Toggle Additional Info")}
               width={16}
               height={16}
               className={`transform transition-transform duration-200 ${
@@ -526,36 +680,20 @@ export default function Sidebar() {
             <div className="pl-4 pt-1 pb-2 flex flex-col gap-1">
               {dopulnitelnoItems.map((item) => (
                 <Link
-                  key={item.label}
+                  key={item.labelKey}
                   href={item.href}
                   target={item.target}
                   className="flex items-center gap-3 px-4 py-1.5 rounded hover:bg-gray-100 text-gray-700 text-sm"
                 >
-                  {item.label === "Помощ" && (
+                  {item.icon && (
                     <Image
-                      src="/information-4-svgrepo-com.svg"
-                      alt="Помощ Icon"
+                      src={item.icon}
+                      alt={t(item.altKey, "")}
                       width={16}
                       height={16}
                     />
                   )}
-                  {item.label === "Към сайта" && (
-                    <Image
-                      src="computer-svgrepo-com.svg"
-                      alt="Към сайта Icon"
-                      width={16}
-                      height={16}
-                    />
-                  )}
-                  {item.label === "Мобилно приложение" && (
-                    <Image
-                      src="/mobile-app-developing-svgrepo-com.svg"
-                      alt="Мобилно приложение Icon"
-                      width={16}
-                      height={16}
-                    />
-                  )}
-                  {item.label}
+                  {t(item.labelKey, item.defaultText)}
                 </Link>
               ))}
             </div>
@@ -563,13 +701,15 @@ export default function Sidebar() {
         </div>
         <div className="border-b border-gray-300 my-2" />
         <div className="mb-1 text-xs text-gray-500 font-semibold">
-          <div className="pb-6">Имате въпроси и нужда от помощ?</div>
+          <div className="pb-6">
+            {t("sidebar.contact.questions", "Имате въпроси и нужда от помощ?")}
+          </div>
           <div className="flex items-start">
             <div className="flex-1">
               <div>
                 <Image
                   src="/Phone.png"
-                  alt="Phone Icon"
+                  alt={t("sidebar.contact.phoneIconAlt", "Phone Icon")}
                   width={16}
                   height={16}
                   className="inline-block ml-1"
@@ -579,7 +719,7 @@ export default function Sidebar() {
               <div className="mt-4">
                 <Image
                   src="/Email.png"
-                  alt="Email Icon"
+                  alt={t("sidebar.contact.emailIconAlt", "Email Icon")}
                   width={16}
                   height={16}
                   className="inline-block ml-1"
@@ -593,18 +733,18 @@ export default function Sidebar() {
                 >
                   <Image
                     src="/Chat.png"
-                    alt="Онлайн чат икона"
+                    alt={t("sidebar.contact.chatIconAlt", "Online Chat Icon")}
                     width={16}
                     height={16}
                   />
-                  Онлайн чат
+                  {t("sidebar.contact.onlineChat", "Онлайн чат")}
                 </Link>
               </div>
             </div>
             <div className="ml-2">
               <Image
                 src="/CallWoman.png"
-                alt="Call Woman Icon"
+                alt={t("sidebar.contact.callWomanIconAlt", "Call Woman Icon")}
                 width={80}
                 height={80}
               />

@@ -13,6 +13,10 @@ import FooterLogin from "@/components/FooterLogin"; // Import the new FooterLogi
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Card from "@/components/Card";
+import { emailPattern, passwordPattern } from "@/utils/validation";
+import { useTranslation } from "react-i18next";
+import "../locales/i18n";
+import { useEffect } from "react";
 
 // Updated Inputs type
 type Inputs = {
@@ -21,12 +25,20 @@ type Inputs = {
 };
 
 const LogIn = () => {
+  const { t, i18n } = useTranslation();
   const router = useRouter(); // Initialize useRouter
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
+
+  useEffect(() => {
+    console.log("LoginPage - Current i18n.language:", i18n.language);
+    if (document.documentElement) {
+      document.documentElement.lang = i18n.language;
+    }
+  }, [i18n.language]);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     // Make onSubmit async
@@ -46,7 +58,7 @@ const LogIn = () => {
         console.log("Login successful:", result);
         // Store the token if needed (e.g., in localStorage or context)
         // localStorage.setItem('token', result.token);
-        toast.success("Login successful!", {
+        toast.success(t("loginPage.toastSuccess"), {
           autoClose: 2000, // Auto close after 2 seconds
           onClose: () => {
             router.push("/dashboard"); // Redirect to dashboard after toast closes
@@ -58,7 +70,7 @@ const LogIn = () => {
       }
     } catch (error) {
       console.error("An error occurred during login:", error);
-      toast.error("An error occurred during login. Please try again.");
+      toast.error(t("loginPage.toastLoginGenericError"));
     }
   };
 
@@ -66,7 +78,10 @@ const LogIn = () => {
     <div>
       <ToastContainer />
       {/* Navigation Bar */}
-      <Header rightButtonText="Регистрация" rightButtonLink="/register" />
+      <Header
+        rightButtonTextKey="common.register"
+        rightButtonLink="/register"
+      />
 
       {/* Main Content */}
       <div className="flex justify-center items-start min-h-screen bg-gray-100 py-10 px-4 sm:px-6 lg:px-8">
@@ -74,14 +89,15 @@ const LogIn = () => {
           {/* Left Side: Login Form */}
           <div className="bg-white p-8 rounded-lg shadow-md w-full md:w-[28rem]">
             <h2 className="text-xl font-semibold mb-2">
-              Виртуален банков клон (e-fibank)
+              {t("loginPage.title")}
             </h2>
             <div className="flex justify-between items-center mb-6">
               <span className="text-xs text-gray-500">
-                <span className="text-red-500">*</span> Потребител:
+                <span className="text-red-500">*</span> {t("common.user")}
               </span>
               <span className="text-xs text-gray-500">
-                <span className="text-red-500">*</span> Задължителни полета
+                <span className="text-red-500">*</span>{" "}
+                {t("common.requiredFieldsHint")}
               </span>
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -103,12 +119,12 @@ const LogIn = () => {
                   id="userName"
                   label=""
                   type="text"
-                  placeholder="Имейл адрес"
+                  placeholder={t("common.emailAddress")}
                   register={register("userName", {
-                    required: "Потребителското име е задължително",
+                    required: t("loginPage.validationUserNameRequired"),
                     pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Невалиден имейл адрес",
+                      value: emailPattern,
+                      message: t("loginPage.validationInvalidEmail"),
                     },
                   })}
                   error={errors.userName}
@@ -134,17 +150,16 @@ const LogIn = () => {
                 <PasswordInput
                   id="password"
                   label=""
-                  placeholder="Парола"
+                  placeholder={t("common.password")}
                   register={register("password", {
-                    required: "Паролата е задължителна",
+                    required: t("loginPage.validationPasswordRequired"),
                     minLength: {
                       value: 10,
-                      message: "Паролата трябва да е поне 10 символа",
+                      message: t("loginPage.validationPasswordMinLength"),
                     },
                     pattern: {
-                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{10,}$/,
-                      message:
-                        "Паролата трябва да е поне 10 символа и да съдържа поне една малка буква, една главна буква и една цифра",
+                      value: passwordPattern,
+                      message: t("loginPage.validationPasswordPattern"),
                     },
                   })}
                   error={errors.password}
@@ -157,12 +172,12 @@ const LogIn = () => {
                 type="submit"
                 className="w-full bg-blue-600 text-white py-2.5 rounded-md hover:bg-blue-700 transition-colors font-semibold mt-0"
               >
-                ВХОД
+                {t("loginPage.loginButton")}
               </Button>
             </form>
             <div className="mt-6 border-t pt-4">
               <p className="text-xs text-gray-600 mb-2">
-                Защитен вход със SSL сертификат от:
+                {t("loginPage.sslCertificateBy")}
               </p>
               <div className="flex items-center justify-between mb-3">
                 <Image
@@ -176,12 +191,12 @@ const LogIn = () => {
               </div>
               <div className="flex justify-start space-x-4 text-xs text-blue-600">
                 <a href="#" className="hover:underline">
-                  <i className="fas fa-shield-alt mr-1"></i>Съвети за сигурност
-                  ›
+                  <i className="fas fa-shield-alt mr-1"></i>
+                  {t("loginPage.securityAdvice")}›
                 </a>
                 <a href="#" className="hover:underline">
-                  <i className="fas fa-exclamation-triangle mr-1"></i>Съобщения
-                  за грешка ›{" "}
+                  <i className="fas fa-exclamation-triangle mr-1"></i>
+                  {t("loginPage.errorMessagesLink")} ›{" "}
                 </a>
               </div>
             </div>
@@ -190,46 +205,43 @@ const LogIn = () => {
           {/* Right Side: Information */}
           <div className="w-full md:w-[28rem] space-y-8">
             <Card
-              title="ВАЖНО!"
+              title={t("loginPage.importantCard.title")}
               titleClassName="text-lg font-semibold text-red-600 mb-2"
             >
               <p className="text-sm text-gray-700 mb-3">
-                ПИБ АД УВЕДОМЯВА КАРТОДЪРЖАТЕЛИТЕ си, че има информация за
-                получени фалшиви съобщения по електронната поща, които...
+                {t("loginPage.importantCard.text")}
               </p>
               <a
                 href="#"
                 className="text-sm text-blue-600 hover:underline font-medium"
               >
-                Прочетете повече ›
+                {t("loginPage.importantCard.link")} ›
               </a>
             </Card>
 
-            <Card title="Разгледайте системата">
+            <Card title={t("loginPage.exploreSystemCard.title")}>
               <p className="text-sm text-gray-700 mb-3">
-                Разгледайте и усетете онлайн банкирането чрез интерактивната ни
-                демо версия.
+                {t("loginPage.exploreSystemCard.text")}
               </p>
               <a
                 href="#"
                 className="text-sm text-blue-600 hover:underline font-medium"
               >
-                ДЕМО ВЕРСИЯ ›
+                {t("loginPage.exploreSystemCard.link")} ›
               </a>
             </Card>
 
-            <Card title="Банкиране с Token">
+            <Card title={t("loginPage.tokenBankingCard.title")}>
               <div className="flex items-start gap-4">
                 <div className="flex-grow">
                   <p className="text-sm text-gray-700 mb-3">
-                    Мобилност, удобство и сигурност в едно, с нашето Token
-                    устройство за генериране на еднократни пароли за вход.
+                    {t("loginPage.tokenBankingCard.text")}
                   </p>
                   <a
                     href="#"
                     className="text-sm text-blue-600 hover:underline font-medium"
                   >
-                    Научете повече ›
+                    {t("loginPage.tokenBankingCard.link")} ›
                   </a>
                 </div>
                 <Image

@@ -1,27 +1,30 @@
 import React from "react";
+import "../locales/i18n"; // Ensure i18n is initialized
+import { useTranslation } from "react-i18next";
 
 const FooterRegister = () => {
+  const { t } = useTranslation();
   return (
     <footer className="bg-gray-100 py-4">
       <div className="container mx-auto text-center text-sm text-gray-600">
         <div className="flex justify-center space-x-4 mb-2">
           <a href="#" className="hover:text-blue-500">
-            Как да добавя сметка ›
+            {t("footerRegister.addAccount")}
           </a>
           <a href="#" className="hover:text-blue-500">
-            Всичко с един потребител (SSO) ›
+            {t("footerRegister.sso")} ›
           </a>
           <a href="#" className="hover:text-blue-500">
-            Процес на регистрация ›
+            {t("footerRegister.registrationProcess")}
           </a>
           <a href="#" className="hover:text-blue-500">
-            Електронен подпис ›
+            {t("footerRegister.eSignature")}
           </a>
           <a href="#" className="hover:text-blue-500">
-            Такси и комисиони ›
+            {t("footerRegister.feesAndCommissions")}
           </a>
         </div>
-        <p>© Първа инвестиционна банка 2024-2025.</p>
+        <p>{t("footerRegister.copyright")}</p>
       </div>
     </footer>
   );

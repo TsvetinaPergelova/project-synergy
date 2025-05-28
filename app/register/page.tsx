@@ -11,6 +11,8 @@ import Header from "@/components/Header"; // Import the new Header component
 import FooterRegister from "@/components/FooterRegister"; // Import the new FooterRegister component
 import TextareaInput from "@/components/TextAreaInput";
 import { emailPattern, passwordPattern } from "@/utils/validation"; // Import validation patterns
+import { useTranslation } from "react-i18next"; // Import useTranslation for i18n
+import "../../locales/i18n"; // Import i18n configuration
 
 // Define an interface for your form inputs
 interface IRegisterInputs {
@@ -27,6 +29,7 @@ interface IRegisterInputs {
 }
 
 const Register = () => {
+  const { t, i18n } = useTranslation(); // Initialize translation
   const {
     register,
     handleSubmit,
@@ -43,6 +46,15 @@ const Register = () => {
     color: "bg-gray-300",
     widthClass: "w-0",
   });
+  useEffect(() => {
+    console.log(
+      "RegisterPage - i18n.language before setting lang attr:",
+      i18n.language
+    );
+    if (document.documentElement) {
+      document.documentElement.lang = i18n.language;
+    }
+  }, [i18n.language]); // Add i18n.language as a dependency
 
   // Effect to update password strength
   useEffect(() => {
@@ -63,29 +75,29 @@ const Register = () => {
     const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(passwordValue);
 
     if (len > 0 && len < 10) {
-      currentMessage = "Паролата е твърде слаба."; // Matches image strength text for short/weak pw
+      currentMessage = t("registerPage.passwordStrengthTooWeak"); // Matches image strength text for short/weak pw
       currentColor = "bg-red-500";
       currentWidthClass = "w-1/4";
     } else if (len >= 10) {
       const meetsPattern = passwordPattern.test(passwordValue);
 
       if (!meetsPattern) {
-        currentMessage = "Паролата е твърде слаба.";
+        currentMessage = t("registerPage.passwordStrengthTooWeak");
         currentColor = "bg-red-500";
         currentWidthClass = "w-1/3"; // 33%
       } else {
         // Meets basic complexity (lower, upper, digit, 10+ chars)
         if (hasSymbol && len >= 12) {
           // Stronger if has symbol and longer
-          currentMessage = "Паролата е много силна.";
+          currentMessage = t("registerPage.passwordStrengthVeryStrong");
           currentColor = "bg-green-600";
           currentWidthClass = "w-full"; // 100%
         } else if (hasSymbol) {
-          currentMessage = "Паролата е силна.";
+          currentMessage = t("registerPage.passwordStrengthStrong");
           currentColor = "bg-green-500";
           currentWidthClass = "w-3/4"; // 75%
         } else {
-          currentMessage = "Паролата е добра."; // Meets pattern, no symbols
+          currentMessage = t("registerPage.passwordStrengthGood"); // Meets pattern, no symbols
           currentColor = "bg-yellow-500";
           currentWidthClass = "w-2/3"; // 66%
         }
@@ -101,7 +113,7 @@ const Register = () => {
       color: currentColor,
       widthClass: currentWidthClass,
     });
-  }, [passwordValue]);
+  }, [passwordValue, t]);
 
   const onSubmit: SubmitHandler<IRegisterInputs> = async (data) => {
     // Remove the repeatPassword field as it's not needed for the backend
@@ -124,24 +136,28 @@ const Register = () => {
         // Handle server-side validation errors or other issues
         console.error("Registration failed:", result.message);
         toast.error(
-          `Registration failed: ${result.message || "Unknown error"}`
+          t("registerPage.toast.registrationFailed", {
+            message: result.message || t("registerPage.toast.unknownError"),
+          })
         );
         return;
       }
 
       // Handle successful registration
       console.log("Registration successful:", result);
-      toast.success("Registration successful! You can now log in.", {
-        autoClose: 2000, // Auto close after 2 seconds
+      toast.success(t("registerPage.toast.registrationSuccess"), {
+        autoClose: 2000,
         onClose: () => {
-          router.push("/"); // Redirect to login page (root path) after toast closes
+          router.push("/");
         },
       });
     } catch (error) {
       console.error("An error occurred during registration:", error);
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      toast.error(`An error occurred: ${errorMessage}. Please try again.`);
+      toast.error(
+        t("registerPage.toast.genericError", { message: errorMessage })
+      );
     }
   };
 
@@ -149,7 +165,10 @@ const Register = () => {
     <div>
       <ToastContainer />
       {/* Navigation Bar */}
-      <Header rightButtonText="Вход" rightButtonLink="http://localhost:3000" />
+      <Header
+        rightButtonTextKey="common.login"
+        rightButtonLink="http://localhost:3000"
+      />
 
       {/* Main Content */}
       <div className="flex items-center justify-center min-h-screen bg-gray-100 py-10">
@@ -159,14 +178,10 @@ const Register = () => {
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-[28rem]"
         >
           <h1 className="text-lg font-bold mb-4 text-center">
-            Регистрация на нов потребител
+            {t("registerPage.title")}
           </h1>
           <p className="text-sm text-gray-600 mb-6">
-            Тази регистрационна форма се попълва, само ако нямате потребител и
-            парола за Виртуален банков клон (e-fibank). Ако вече имате
-            потребител и парола, добавянето на достъп до ново физическо или
-            юридическо лице става в банката. Ако сте забравили своя потребител
-            и/или парола, заповядайте в банката, за да ги получите.
+            {t("registerPage.infoParagraph1")}
           </p>
           {/* Border Bottom */}
           <div className="border-b border-gray-300 mb-6"></div>
@@ -174,12 +189,12 @@ const Register = () => {
           {/* Form Fields */}
           <Input
             id="egn"
-            label="* ЕГН:"
+            label={t("registerPage.egnLabel")}
             register={register("egn", {
-              required: "ЕГН е задължително поле",
+              required: t("registerPage.validation.egnRequired"),
               pattern: {
                 value: /^[0-9]{10}$/,
-                message: "ЕГН трябва да бъде точно 10 цифри",
+                message: t("registerPage.validation.egnPattern"),
               },
             })}
             error={errors.egn}
@@ -189,19 +204,19 @@ const Register = () => {
 
           <Input
             id="lnch"
-            label="ЛНЧ или паспорт:"
+            label={t("registerPage.lnchLabel")}
             register={register("lnch")} // No specific validation for now, can be added
             wrapperClassName="mb-4"
           />
 
           <Input
             id="nameCyrillic"
-            label="* Име и фамилия на кирилица:"
+            label={t("registerPage.nameCyrillicLabel")}
             register={register("nameCyrillic", {
-              required: "Името на кирилица е задължително",
+              required: t("registerPage.validation.nameCyrillicRequired"),
               pattern: {
                 value: /^[\u0400-\u04FF\s]+$/u,
-                message: "Името трябва да съдържа само букви на кирилица",
+                message: t("registerPage.validation.nameCyrillicPattern"),
               },
             })}
             error={errors.nameCyrillic}
@@ -210,12 +225,12 @@ const Register = () => {
 
           <Input
             id="nameLatin"
-            label="* Име и фамилия на латиница:"
+            label={t("registerPage.nameLatinLabel")}
             register={register("nameLatin", {
-              required: "Името на латиница е задължително",
+              required: t("registerPage.validation.nameLatinRequired"),
               pattern: {
                 value: /^[a-zA-Z\s]+$/,
-                message: "Името трябва да съдържа само букви на латиница",
+                message: t("registerPage.validation.nameLatinPattern"),
               },
             })}
             error={errors.nameLatin}
@@ -224,13 +239,13 @@ const Register = () => {
 
           <Input
             id="email"
-            label="* E-mail:"
+            label={t("registerPage.emailLabel")}
             type="email"
             register={register("email", {
-              required: "Имейлът е задължителен",
+              required: t("registerPage.validation.emailRequired"),
               pattern: {
                 value: emailPattern,
-                message: "Невалиден имейл адрес",
+                message: t("registerPage.validation.emailPattern"),
               },
             })}
             error={errors.email}
@@ -239,9 +254,9 @@ const Register = () => {
 
           <Input
             id="phone"
-            label="* Телефон:"
+            label={t("registerPage.phoneLabel")}
             register={register("phone", {
-              required: "Телефонът е задължителен",
+              required: t("registerPage.validation.phoneRequired"),
             })}
             error={errors.phone}
             wrapperClassName="mb-1"
@@ -249,9 +264,9 @@ const Register = () => {
 
           <TextareaInput
             id="address"
-            label="* Адрес:"
+            label={t("registerPage.addressLabel")}
             register={register("address", {
-              required: "Адресът е задължителен",
+              required: t("registerPage.validation.addressRequired"),
             })}
             error={errors.address}
             wrapperClassName="mb-1"
@@ -260,38 +275,36 @@ const Register = () => {
 
           <Input
             id="username"
-            label="* Потребител:"
+            label={t("registerPage.usernameLabel")}
             register={register("username", {
-              required: "Потребителското име е задължително",
+              required: t("registerPage.validation.usernameRequired"),
               pattern: {
                 value: /^[a-zA-Z0-9_.-]*$/,
-                message:
-                  "Разрешени са латински букви, цифри, '.', '_' или '-'.",
+                message: t("registerPage.validation.usernamePattern"),
               },
               validate: {
                 noCyrillic: (value: string) =>
                   !/[\u0400-\u04FF]/.test(value) ||
-                  "Символи на кирилица не са позволени!",
+                  t("registerPage.validation.usernameNoCyrillic"),
               },
             })}
             error={errors.username}
-            placeholder="philip_philipov"
+            placeholder={t("registerPage.usernamePlaceholder")}
             wrapperClassName="mb-1"
           />
 
           <PasswordInput
             id="password"
-            label="* Парола:"
+            label={t("registerPage.passwordLabel")}
             register={register("password", {
-              required: "Паролата е задължителна",
+              required: t("registerPage.validation.passwordRequired"),
               minLength: {
                 value: 10,
-                message: "Паролата трябва да е поне 10 символа",
+                message: t("registerPage.validation.passwordMinLength"),
               },
               pattern: {
                 value: passwordPattern,
-                message:
-                  "Паролата трябва да съдържа поне една малка буква, една главна буква и една цифра",
+                message: t("registerPage.validation.passwordPattern"),
               },
             })}
             error={errors.password}
@@ -328,11 +341,12 @@ const Register = () => {
 
           <PasswordInput
             id="repeatPassword"
-            label="* Повторете Парола:"
+            label={t("registerPage.repeatPasswordLabel")}
             register={register("repeatPassword", {
-              required: "Повторната парола е задължителна",
+              required: t("registerPage.validation.repeatPasswordRequired"),
               validate: (value) =>
-                value === passwordValue || "Паролите не съвпадат",
+                value === passwordValue ||
+                t("registerPage.validation.passwordsNoMatch"),
             })}
             error={errors.repeatPassword}
             placeholder="••••••••"
@@ -341,12 +355,13 @@ const Register = () => {
           {/* Border Bottom */}
           <div className="border-b border-gray-300 mb-6"></div>
           <p className="text-sm text-gray-600 mb-4">
-            Необходимо е да запомните потребителското си име и парола , които
-            току-що въведохте.След като потвърдите регистрацията в банката,те ще
-            Ви служат за вход във Виртуален банков клон (e-fibank).
+            {t(
+              "registerPage.infoParagraph2",
+              'Необходимо е да запомните потребителското си име и парола, които току-що въведохте. След като потвърдите регистрацията в банката, те ще Ви служат за вход във Виртуален банков клон (e-fibank)."'
+            )}
           </p>
 
-          <Button type="submit">Изпратете искане за регистрация</Button>
+          <Button type="submit">{t("registerPage.submitButton")}</Button>
         </form>
       </div>
 

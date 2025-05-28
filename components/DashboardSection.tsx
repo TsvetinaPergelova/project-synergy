@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image"; // Import the Image component
+import { useTranslation } from "react-i18next";
 
 interface DashboardSectionProps {
   title: string;
@@ -12,18 +13,19 @@ const DashboardSection: React.FC<DashboardSectionProps> = ({
   sectionId,
   children,
 }) => {
+  const { t } = useTranslation();
   return (
     <section id={sectionId} className="mt-8">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-700">{title}</h2>
         <div className="flex items-center">
           <button className="text-sm text-blue-600 hover:underline mr-4">
-            Вижте всички &gt;
+            {t("dashboardPage.dashboardSection.viewAll")} &gt;
           </button>
           <button className="p-1 hover:bg-gray-100 rounded">
             <Image
               src="/SettingsIcon.png" // Path to your settings icon
-              alt="Settings"
+              alt={t("dashboardPage.dashboardSection.settingsAlt")}
               width={20} // Adjust as needed
               height={20} // Adjust as needed
             />

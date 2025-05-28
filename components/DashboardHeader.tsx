@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HeaderDropdown from "./HeaderDropdown"; // Import the new component
+import { useTranslation } from "react-i18next";
+// import { usePathname } from "next/navigation";
 
 interface DashboardHeaderProps {
   showMenuButton?: boolean;
@@ -14,64 +16,142 @@ export default function DashboardHeader({
   showMenuButton,
   onMenuClick,
 }: DashboardHeaderProps) {
+  const { t, i18n } = useTranslation();
+  // const pathname = usePathname();
+  const currentLocale = i18n.language; // Get the current language from i18n
+  const switchToLocale = currentLocale === "bg" ? "en" : "bg"; // Toggle between 'bg' and 'en'
+  const langSwitchButtonText =
+    currentLocale === "bg"
+      ? t("common.english", "English")
+      : t("common.bulgarian", "Български"); // Text for the language switch button
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false);
   const [showNotificationsDropdown, setShowNotificationsDropdown] =
     useState(false);
 
+  useEffect(() => {
+    console.log("DashboardHeader - Current i18n.language:", i18n.language);
+    if (document.documentElement) {
+      document.documentElement.lang = i18n.language;
+    }
+  }, [i18n.language]);
+
+  const handleLanguageChange = (newLocale: string) => {
+    i18n.changeLanguage(newLocale).then(() => {
+      // This callback is optional, but useful for logging or other side effects.
+      console.log("DashboardHeader: Language changed to:", newLocale);
+      // The page content using t() will automatically re-render.
+    });
+  };
+
   const settingsMenuItems = [
-    { name: "Лични данни", href: "#", icon: "/user-avatar.png" },
-    { name: "Общи настройки", href: "#", icon: "/SettingsIcon.png" },
-    { name: "Настройки на сметка", href: "#", icon: "/bill-svgrepo-com.svg" },
     {
-      name: "Настройки на депозит",
+      name: t("dashboardHeader.settingsMenuItems.personalData", "Лични данни"),
+      href: "#",
+      icon: "/user-avatar.png",
+    },
+    {
+      name: t(
+        "dashboardHeader.settingsMenuItems.generalSettings",
+        "Общи настройки"
+      ),
+      href: "#",
+      icon: "/SettingsIcon.png",
+    },
+    {
+      name: t(
+        "dashboardHeader.settingsMenuItems.accountSettings",
+        "Настройки на сметка"
+      ),
+      href: "#",
+      icon: "/bill-svgrepo-com.svg",
+    },
+    {
+      name: t(
+        "dashboardHeader.settingsMenuItems.depositSettings",
+        "Настройки на депозит"
+      ),
       href: "#",
       icon: "/deposit-svgrepo-com.svg",
     },
     {
-      name: "Настройки на карта",
+      name: t(
+        "dashboardHeader.settingsMenuItems.cardSettings",
+        "Настройки на карта"
+      ),
       href: "#",
       icon: "/credit-card-svgrepo-com.svg",
     },
     {
-      name: "3D сигурност на карти",
+      name: t(
+        "dashboardHeader.settingsMenuItems.security3D",
+        "3D сигурност на карти"
+      ),
       href: "#",
       icon: "/security-card-svgrepo-com.svg",
     },
     {
-      name: "Промяна на парола",
+      name: t(
+        "dashboardHeader.settingsMenuItems.changePassword",
+        "Промяна на парола"
+      ),
       href: "#",
       icon: "/padlock-locked-simple-svgrepo-com.svg",
     },
     {
-      name: "Регистриране на сертификат",
+      name: t(
+        "dashboardHeader.settingsMenuItems.regosterCertificate",
+        "Регистриране на сертификат"
+      ),
       href: "#",
       icon: "/sertificate-svgrepo-com.svg",
     },
     {
-      name: "Регистриране на КЕП",
+      name: t(
+        "dashboardHeader.settingsMenuItems.registerKEP",
+        "Регистриране на КЕП"
+      ),
       href: "#",
       icon: "/pen-nib-svgrepo-com.svg",
     },
     {
-      name: "Деблокиране на Token",
+      name: t(
+        "dashboardHeader.settingsMenuItems.unblockToken",
+        "Деблокиране на Token"
+      ),
       href: "#",
       highlighted: true,
       icon: "/token-svgrepo-com.svg",
     },
-    { name: "Промяна ПИН Token", href: "#", icon: "/token-svgrepo-com.svg" },
     {
-      name: "E-mail и SMS известяване",
+      name: t(
+        "dashboardHeader.settingsMenuItems.changePINToken",
+        "Промяна ПИН Token"
+      ),
+      href: "#",
+      icon: "/token-svgrepo-com.svg",
+    },
+    {
+      name: t(
+        "dashboardHeader.settingsMenuItems.emailSMSNotifications",
+        "E-mail и SMS известяване"
+      ),
       href: "#",
       icon: "/bell-alt-1-svgrepo-com.svg",
     },
     {
-      name: "SMS известяване за карти",
+      name: t(
+        "dashboardHeader.settingsMenuItems.smsCardNotifications",
+        "SMS известяване за карти"
+      ),
       href: "#",
       icon: "/sms-organizer-svgrepo-com.svg",
     },
     {
-      name: "Мобилно приложение Fibank",
+      name: t(
+        "dashboardHeader.settingsMenuItems.mobileAppFibank",
+        "Мобилно приложение Fibank"
+      ),
       href: "#",
       icon: "/mobile-phone-svgrepo-com.svg",
     },
@@ -82,8 +162,14 @@ export default function DashboardHeader({
       id: 1,
       icon: "/CoinIcon.png",
       iconBg: "bg-blue-600",
-      title: "Неуспешен превод",
-      description: "Превод с получател НОИ не беше извършен...",
+      title: t(
+        "dashboardHeader.notificationItems.failedTransferTitle",
+        "Неуспешен превод"
+      ),
+      description: t(
+        "dashboardHeader.notificationItems.failedTransferDesc",
+        "Превод с получател НОИ не беше извършен..."
+      ),
       timestamp: "20/01/2015 16:00",
       isRead: true,
     },
@@ -91,8 +177,14 @@ export default function DashboardHeader({
       id: 2,
       icon: "/file.svg",
       iconBg: "bg-blue-600",
-      title: "Нова картова авторизация",
-      description: "От карта 401820***2251 бяха изтеглени 100 лв.",
+      title: t(
+        "dashboardHeader.notificationItems.newCardAuthTitle",
+        "Нова картова авторизация"
+      ),
+      description: t(
+        "dashboardHeader.notificationItems.newCardAuthDesc",
+        "От карта 401820***2251 бяха изтеглени 100 лв."
+      ),
       timestamp: "20/01/2015 14:00",
       actionType: "menu",
       highlighted: true,
@@ -101,16 +193,28 @@ export default function DashboardHeader({
       id: 3,
       icon: "/TokenIcon.png",
       iconBg: "bg-gray-500",
-      title: "Успешно активирано Token устройство.",
-      description: "Вече можете да ползвате Token устройството си за...",
+      title: t(
+        "dashboardHeader.notificationItems.tokenActivatedTitle",
+        "Успешно активирано Token устройство."
+      ),
+      description: t(
+        "dashboardHeader.notificationItems.tokenActivatedDesc",
+        "Вече можете да ползвате Token устройството си за..."
+      ),
       timestamp: "16/01/2015 15:30",
     },
     {
       id: 4,
       icon: "/CoinIcon.png",
       iconBg: "bg-gray-500",
-      title: "Погасяване на кредит",
-      description: "Остават 5 дена, за плащане на вноска по кредит...",
+      title: t(
+        "dashboarsHeader.noficationItems.creditRepaymentTitle",
+        "Погасяване на кредит"
+      ),
+      description: t(
+        "dashboardHeader.notificationItems.creditRepaymentDesc",
+        "Остават 5 дена, за плащане на вноска по кредит..."
+      ),
       timestamp: "15/01/2015 19:00",
     },
   ];
@@ -122,7 +226,7 @@ export default function DashboardHeader({
           <button
             onClick={onMenuClick}
             className="flex items-center text-gray-700 hover:text-blue-700 mr-4 p-2 rounded hover:bg-gray-100"
-            aria-label="Toggle menu"
+            aria-label={t("dashboardHeader.toggleMenuAriaLabel", "Toggle menu")}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -138,14 +242,16 @@ export default function DashboardHeader({
                 d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
               />
             </svg>
-            <span className="font-medium">МЕНЮ</span>
+            <span className="font-medium">
+              {t("dashboardHeader.menu", "МЕНЮ")}
+            </span>
           </button>
         )}
         {/* Logo */}
         <div className="flex items-center pl-12">
           <Image
             src="/logo-fibank-signature.svg"
-            alt="Fibank Logo"
+            alt={t("header.logoAlt", "Fibank Logo")}
             width={150}
             height={32}
             className="h-8 w-auto"
@@ -153,18 +259,24 @@ export default function DashboardHeader({
         </div>
         {/* Right Side Nav */}
         <div className="flex items-center gap-8 ml-auto">
-          <button className="text-gray-700 text-sm font-medium hover:text-blue-700">
-            ENGLISH
+          <button
+            onClick={() => handleLanguageChange(switchToLocale)}
+            className="text-gray-700 text-sm font-medium hover:text-blue-700 cursor-pointer"
+            type="button"
+          >
+            {langSwitchButtonText}
           </button>
           <div className="relative flex items-center text-gray-700 text-sm font-medium hover:text-blue-700 cursor-pointer">
             <Image
               src="/MessageIcon.png"
-              alt="User"
+              alt={t("dashboardHeader.messagesAlt", "User Messages")}
               width={32}
               height={32}
               className=" border pr-3"
             />
-            <span className="material-icons mr-1">СЪОБЩЕНИЯ</span>
+            <span className="material-icons mr-1">
+              {t("dashboardHeader.messages", "СЪОБЩЕНИЯ")}
+            </span>
             <span className="absolute -top-2 -right-4 bg-red-600 text-white text-xs rounded-full px-1.5">
               2
             </span>
@@ -174,24 +286,29 @@ export default function DashboardHeader({
           <HeaderDropdown
             isOpen={showNotificationsDropdown}
             setIsOpen={setShowNotificationsDropdown}
-            ariaLabel="Toggle notifications menu"
+            ariaLabel={t(
+              "dashboardHeader.toggleNotificationsAriaLabel",
+              "Toggle notifications menu"
+            )}
             dropdownWidthClass="w-96"
             buttonContent={
               <>
                 <Image
                   src="/NotificationIcon.png"
-                  alt="Notifications"
+                  alt={t("dashboardHeader.notificationsAlt", "Notifications")}
                   width={32}
                   height={32}
                   className="border pr-3"
                 />
-                <span className="material-icons mr-1">ИЗВЕСТИЯ</span>
+                <span className="material-icons mr-1">
+                  {t("dashboardHeader.notifications", "ИЗВЕСТИЯ")}
+                </span>
                 <span className="absolute -top-2 -right-4 bg-red-600 text-white text-xs rounded-full px-1.5">
                   3
                 </span>
                 <Image
                   src="/arrow-down-3101.png"
-                  alt="Toggle submenu"
+                  alt={t("dashboardHeader.toggleSubmenuAlt", "Toggle submenu")}
                   width={16}
                   height={16}
                   className={`ml-1 transform transition-transform duration-200 ${
@@ -203,7 +320,10 @@ export default function DashboardHeader({
             dropdownContent={
               <div className="p-4">
                 <h3 className="text-sm font-bold text-gray-800 mb-3">
-                  Имате 3 нови известия
+                  {t(
+                    "dashboardHeader.notificationsDropdown.titleDynamic",
+                    "Имате 3 нови известия"
+                  )}
                 </h3>
                 <ul className="-mx-4">
                   {notificationItems.map((item) => (
@@ -246,7 +366,11 @@ export default function DashboardHeader({
                     className="text-sm text-blue-600 hover:underline font-medium"
                     onClick={() => setShowNotificationsDropdown(false)}
                   >
-                    Вижте всички известия &gt;
+                    {t(
+                      "dashboardHeader.notificationsDropdown.viewAll",
+                      "Вижте всички известия"
+                    )}{" "}
+                    &gt;
                   </Link>
                 </div>
               </div>
@@ -257,21 +381,26 @@ export default function DashboardHeader({
           <HeaderDropdown
             isOpen={showSettingsDropdown}
             setIsOpen={setShowSettingsDropdown}
-            ariaLabel="Toggle settings menu"
+            ariaLabel={t(
+              "dashboardHeader.toggleSettingsAriaLabel",
+              "Toggle settings menu"
+            )}
             dropdownWidthClass="w-72"
             buttonContent={
               <>
                 <Image
                   src="/SettingsIcon.png"
-                  alt="Settings"
+                  alt={t("dashboarsHeader.settingsAlt", "Settings")}
                   width={32}
                   height={32}
                   className="border pr-3"
                 />
-                <span className="material-icons mr-1">НАСТРОЙКИ</span>
+                <span className="material-icons mr-1">
+                  {t("dashboardHeader.settings", "НАСТРОЙКИ")}
+                </span>
                 <Image
                   src="/arrow-down-3101.png"
-                  alt="Toggle submenu"
+                  alt={t("dashboardHeader.toggleSubmenuAlt", "Toggle submenu")}
                   width={16}
                   height={16}
                   className={`ml-1 transform transition-transform duration-200 ${
@@ -306,20 +435,23 @@ export default function DashboardHeader({
           <HeaderDropdown
             isOpen={showProfileDropdown}
             setIsOpen={setShowProfileDropdown}
-            ariaLabel="Toggle profile menu"
+            ariaLabel={t(
+              "dashboardheader.toggleProfileAriaLabel",
+              "Toggle profile menu"
+            )}
             dropdownWidthClass="w-72"
             buttonContent={
               <>
                 <Image
                   src="/user-avatar.png"
-                  alt="User"
+                  alt={t("dashboardHeader.userAvatarAlt", "User Avatar")}
                   width={32}
                   height={32}
                   className="rounded-full border"
                 />
                 <Image
                   src="/arrow-down-3101.png"
-                  alt="Toggle submenu"
+                  alt={t("dashboardHeader.toggleSubmenuAlt", "Toggle submenu")}
                   width={16}
                   height={16}
                   className={`ml-2 transform transition-transform duration-200 ${
@@ -334,15 +466,20 @@ export default function DashboardHeader({
                   <div className="flex items-center gap-3">
                     <Image
                       src="/user-avatar.png"
-                      alt="User Avatar"
+                      alt={t("dashboardHeader.userAvatarAlt", "User Avatar")}
                       width={40}
                       height={40}
                       className="rounded-full"
                     />
                     <div>
-                      <div className="text-xs text-gray-500">Потребител:</div>
+                      <div className="text-xs text-gray-500">
+                        {t(
+                          "dashboardHeader.profileDropdown.userLabel",
+                          "Потребител:"
+                        )}
+                      </div>
                       <div className="font-semibold text-sm text-gray-800">
-                        Филип Филипов
+                        Филип Филипов {/* Dynamic data - keep as is */}
                       </div>
                     </div>
                   </div>
@@ -351,19 +488,28 @@ export default function DashboardHeader({
                       <div className="w-6 h-6 bg-white border-2 border-red-500"></div>
                     </div>
                     <div>
-                      <div className="text-xs text-gray-500">Клиент:</div>
+                      <div className="text-xs text-gray-500">
+                        {t(
+                          "dashboardHeader.profileDropdown.clientLabel",
+                          "Клиент:"
+                        )}
+                      </div>
                       <div className="font-semibold text-sm text-gray-800">
-                        УИЗ ЕООД
+                        УИЗ ЕООД {/* Dynamic data - keep as is */}
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="p-4">
                   <div className="text-xs text-gray-500 mb-2">
-                    Изберете друг клиент:
+                    {t(
+                      "dashboardHeader.profileDropdown.selectOtherClientLabel",
+                      "Изберете друг клиент:"
+                    )}
                   </div>
                   <ul>
                     {[
+                      /* Dynamic data - keep as is */
                       { name: "Андрей Нончев", avatar: "/user-avatar.png" },
                       { name: "Борис ООД", avatar: "/user-avatar.png" },
                       { name: "Йордан Геновски", avatar: "/user-avatar.png" },
@@ -399,12 +545,14 @@ export default function DashboardHeader({
           >
             <Image
               src="/LogoutIcon.png"
-              alt="Logout"
+              alt={t("dashboardHeader.logoutAlt", "Logout")}
               width={32}
               height={32}
               className="border pr-3"
             />
-            <span className="material-icons mr-1">ИЗХОД</span>
+            <span className="material-icons mr-1">
+              {t("dashboardHeader.logout", "ИЗХОД")}
+            </span>
           </Link>
         </div>
       </nav>
