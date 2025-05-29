@@ -580,7 +580,7 @@ export default function Home() {
                         />
                         <div>
                           <div className="text-sm font-medium text-gray-900">
-                            {t(account.typeKey)}
+                            {t("account.typeKey")}
                           </div>
                           <div className="text-sm text-gray-500">
                             {account.accountNumber}
@@ -605,12 +605,12 @@ export default function Home() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button
-                        title={t(account.actionTooltipKey)}
+                        title={t("account.actionTooltipKey")}
                         className="p-1 hover:bg-gray-100 rounded"
                       >
                         <Image
                           src={account.actionIconPath}
-                          alt={t(account.actionTooltipKey)}
+                          alt={t("account.actionTooltipKey")}
                           width={20}
                           height={20}
                         />
@@ -690,7 +690,7 @@ export default function Home() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {transaction.paymentTypeKey}
+                        {t("transaction.paymentTypeKey")}
                       </div>
                       <div className="text-sm text-blue-600 hover:underline cursor-pointer">
                         {transaction.paymentSubTypeKey}
@@ -698,7 +698,7 @@ export default function Home() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {transaction.payerName}
+                        {t("transaction.payerName")}
                       </div>
                       <div className="text-sm text-gray-500">
                         {transaction.payerAccount}
@@ -1003,7 +1003,7 @@ export default function Home() {
                       <div className="flex items-center">
                         <Image
                           src={payment.iconPath}
-                          alt="" // Alt text can be improved if needed
+                          alt={t("dashboardPage.iconPath")} // Alt text can be improved if needed
                           width={32} // Increased size
                           height={32} // Increased size
                           className="mr-3 flex-shrink-0 h-8 w-8 rounded-full bg-gray-200 p-1" // Adjusted Tailwind classes
@@ -1024,12 +1024,12 @@ export default function Home() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
                       <button
-                        title="Информация"
+                        title={t("dashboardPage.Information")}
                         className="p-1 hover:bg-gray-100 rounded"
                       >
                         <Image
                           src={payment.infoIconPath}
-                          alt="Информация"
+                          alt={t("dashboardPage.Information")}
                           width={20}
                           height={20}
                         />
@@ -1355,44 +1355,44 @@ export default function Home() {
                         <div className="flex space-x-1">
                           <button
                             className="p-1 hover:bg-gray-100 rounded"
-                            title="Редактирай"
+                            title={t("dashboardPage.iconEdit", "Редактирай")}
                           >
                             <Image
                               src={deposit.actionIcon1Path}
-                              alt="Action 1"
+                              alt={t("dashboardPage.iconEdit", "Редактирай")}
                               width={18}
                               height={18}
                             />
                           </button>
                           <button
                             className="p-1 hover:bg-gray-100 rounded"
-                            title="Извлечение"
+                            title={t("dashboardPage.iconExtract", "Извлечение")}
                           >
                             <Image
                               src={deposit.actionIcon2Path}
-                              alt="Action 2"
+                              alt={t("dashboardPage.iconExtract", "Извлечение")}
                               width={18}
                               height={18}
                             />
                           </button>
                           <button
                             className="p-1 hover:bg-gray-100 rounded"
-                            title="Нов превод"
+                            title={t("account.actionTooltipKey")}
                           >
                             <Image
                               src={deposit.actionIcon3Path}
-                              alt="Нов превод"
+                              alt={t("account.actionTooltipKey")}
                               width={18}
                               height={18}
                             />
                           </button>
                           <button
                             className="p-1 hover:bg-gray-100 rounded"
-                            title="Съобщение"
+                            title={t("dashboardPage.iconMessage", "Съобщение")}
                           >
                             <Image
                               src={deposit.actionIcon4Path}
-                              alt="Action 4"
+                              alt={t("dashboardPage.iconMessage", "Съобщение")}
                               width={18}
                               height={18}
                             />

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import HeaderDropdown from "./HeaderDropdown"; // Import the new component
 import { useTranslation } from "react-i18next";
+
 // import { usePathname } from "next/navigation";
 
 interface DashboardHeaderProps {
@@ -100,7 +101,7 @@ export default function DashboardHeader({
     },
     {
       name: t(
-        "dashboardHeader.settingsMenuItems.regosterCertificate",
+        "dashboardHeader.settingsMenuItems.registerCertificate",
         "Регистриране на сертификат"
       ),
       href: "#",
@@ -163,11 +164,11 @@ export default function DashboardHeader({
       icon: "/CoinIcon.png",
       iconBg: "bg-blue-600",
       title: t(
-        "dashboardHeader.notificationItems.failedTransferTitle",
+        "dashboardHeader.notificationsItems.failedTransferTitle",
         "Неуспешен превод"
       ),
       description: t(
-        "dashboardHeader.notificationItems.failedTransferDesc",
+        "dashboardHeader.notificationsItems.failedTransferDesc",
         "Превод с получател НОИ не беше извършен..."
       ),
       timestamp: "20/01/2015 16:00",
@@ -178,11 +179,11 @@ export default function DashboardHeader({
       icon: "/file.svg",
       iconBg: "bg-blue-600",
       title: t(
-        "dashboardHeader.notificationItems.newCardAuthTitle",
+        "dashboardHeader.notificationsItems.newCardAuthTitle",
         "Нова картова авторизация"
       ),
       description: t(
-        "dashboardHeader.notificationItems.newCardAuthDesc",
+        "dashboardHeader.notificationsItems.newCardAuthDesc",
         "От карта 401820***2251 бяха изтеглени 100 лв."
       ),
       timestamp: "20/01/2015 14:00",
@@ -194,11 +195,11 @@ export default function DashboardHeader({
       icon: "/TokenIcon.png",
       iconBg: "bg-gray-500",
       title: t(
-        "dashboardHeader.notificationItems.tokenActivatedTitle",
+        "dashboardHeader.notificationsItems.tokenActivatedTitle",
         "Успешно активирано Token устройство."
       ),
       description: t(
-        "dashboardHeader.notificationItems.tokenActivatedDesc",
+        "dashboardHeader.notificationsItems.tokenActivatedDesc",
         "Вече можете да ползвате Token устройството си за..."
       ),
       timestamp: "16/01/2015 15:30",
@@ -208,11 +209,11 @@ export default function DashboardHeader({
       icon: "/CoinIcon.png",
       iconBg: "bg-gray-500",
       title: t(
-        "dashboarsHeader.noficationItems.creditRepaymentTitle",
+        "dashboardHeader.notificationsItems.creditRepaymentTitle",
         "Погасяване на кредит"
       ),
       description: t(
-        "dashboardHeader.notificationItems.creditRepaymentDesc",
+        "dashboardHeader.notificationsItems.creditRepaymentDesc",
         "Остават 5 дена, за плащане на вноска по кредит..."
       ),
       timestamp: "15/01/2015 19:00",
@@ -390,7 +391,7 @@ export default function DashboardHeader({
               <>
                 <Image
                   src="/SettingsIcon.png"
-                  alt={t("dashboarsHeader.settingsAlt", "Settings")}
+                  alt={t("dashboardHeader.settingsAlt", "Settings")}
                   width={32}
                   height={32}
                   className="border pr-3"
@@ -436,7 +437,7 @@ export default function DashboardHeader({
             isOpen={showProfileDropdown}
             setIsOpen={setShowProfileDropdown}
             ariaLabel={t(
-              "dashboardheader.toggleProfileAriaLabel",
+              "dashboardHeader.toggleProfileAriaLabel",
               "Toggle profile menu"
             )}
             dropdownWidthClass="w-72"
